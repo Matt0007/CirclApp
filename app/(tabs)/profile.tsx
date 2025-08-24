@@ -7,7 +7,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Profile() {
   const { colors } = useTheme();
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUserData } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -70,13 +70,40 @@ export default function Profile() {
 
         <View style={styles.userInfo}>
           <Text style={styles.userText}>
-            Nom : {user?.name || "Non défini"}
+            Prénom : {user?.firstName || "Non défini"}
+          </Text>
+          <Text style={styles.userText}>
+            Nom : {user?.lastName || "Non défini"}
+          </Text>
+          <Text style={styles.userText}>
+            Nom d&apos;utilisateur : {user?.userName || "Non défini"}
           </Text>
           <Text style={styles.userText}>Email : {user?.email}</Text>
+          <Text style={styles.userText}>
+            Membre depuis :{" "}
+            {user?.createdAt
+              ? new Date(user.createdAt).toLocaleDateString("fr-FR")
+              : "Non défini"}
+          </Text>
+          <Text style={styles.userText}>
+            Image de profil :{" "}
+            {user?.profileImage ? "Configurée" : "Non configurée"}
+          </Text>
         </View>
         <View style={styles.themeToggle}>
           <ThemeToggle />
         </View>
+
+        <TouchableOpacity
+          style={[
+            styles.logoutButton,
+            { backgroundColor: colors.primary, marginBottom: 16 },
+          ]}
+          onPress={refreshUserData}
+        >
+          <Text style={styles.logoutButtonText}>Actualiser le profil</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Se déconnecter</Text>
         </TouchableOpacity>

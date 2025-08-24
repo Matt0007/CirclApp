@@ -2,7 +2,12 @@
 export interface User {
   id: string;
   email: string;
-  name?: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  profileImage?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Types pour le thème

@@ -27,7 +27,7 @@ export default function Auth() {
     await authLogin({
       id: result.user.id,
       email: result.user.email,
-      name: `${result.user.firstName} ${result.user.lastName}`,
+      token: result.token,
     });
     // Rediriger vers les onglets après connexion réussie
     router.replace("/(tabs)");
@@ -37,7 +37,7 @@ export default function Auth() {
     await authLogin({
       id: result.user.id,
       email: result.user.email,
-      name: `${result.user.firstName} ${result.user.lastName}`,
+      token: result.token,
     });
     // Rediriger vers les onglets après inscription réussie
     router.replace("/(tabs)");
@@ -81,6 +81,17 @@ export default function Auth() {
             paddingBottom="$8"
           >
             <YStack alignItems="center" space="$2">
+              <Text
+                style={{
+                  fontSize: 64,
+                  fontWeight: "bold",
+                  fontFamily: "Signatra",
+                  color: colors.primary,
+                }}
+              >
+                Circl
+              </Text>
+
               <Text
                 style={{
                   fontSize: 28,
@@ -186,7 +197,7 @@ export default function Auth() {
             </YStack>
 
             <XStack alignItems="center" justifyContent="center" space="$1">
-              <Text style={{ color: colors.mutedForeground}}>
+              <Text style={{ color: colors.mutedForeground }}>
                 {isLogin ? "Pas encore inscrit ?" : "Déjà inscrit ?"}
               </Text>
               <TouchableOpacity onPress={toggleMode}>

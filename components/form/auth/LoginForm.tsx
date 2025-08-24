@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import {
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  View,
-} from "react-native";
-import { YStack, Text, Button } from "tamagui";
+import { TouchableOpacity, TextInput, View } from "react-native";
+import { YStack, Text } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../../contexts/ThemeContext";
 import { useLogin } from "../../../hooks/auth";
 import { AlertFormError } from "../../alert";
+import { ButtonGradient } from "../../common";
 
 interface LoginFormProps {
   onLoginSuccess: (userData: any) => void;
@@ -90,8 +85,8 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
           <TouchableOpacity
             style={{
               position: "absolute",
-              right: 16,
-              top: 12,
+              right: 12,
+              top: 9,
               padding: 4,
             }}
             onPress={() => setShowPassword(!showPassword)}
@@ -122,33 +117,12 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
 
       <AlertFormError error={error} />
 
-      <Button
-        theme="outlined"
+      <ButtonGradient
         onPress={handleLogin}
+        title="Se connecter"
+        isLoading={isLoading}
         disabled={isLoading}
-        style={{
-          borderWidth: 0,
-          borderRadius: 12,
-          overflow: "hidden",
-        }}
-        color="#FFFFFF"
-      >
-        <LinearGradient
-          colors={[colors.gradientStart, colors.gradientEnd]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-          }}
-        />
-        <Text style={{ fontSize: 16, fontWeight: "bold", color: "#FFFFFF" }}>
-          {isLoading ? <ActivityIndicator color="#FFFFFF" /> : "Se connecter"}
-        </Text>
-      </Button>
+      />
     </YStack>
   );
 }

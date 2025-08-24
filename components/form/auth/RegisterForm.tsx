@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   TextInput,
   View,
   TouchableOpacity,
 } from "react-native";
-import { YStack, XStack, Text, Button } from "tamagui";
+import { YStack, XStack } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../../contexts/ThemeContext";
 import { useSendVerification, useRegister } from "../../../hooks/auth";
 import { AlertFormError } from "../../alert";
 import VerificationModal from "./VerificationModal";
+import { ButtonGradient } from "../../common";
 
 interface RegisterFormProps {
   onRegisterSuccess: (userData: any) => void;
@@ -191,8 +190,8 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
             <TouchableOpacity
               style={{
                 position: "absolute",
-                right: 16,
-                top: 12,
+                right: 12,
+                top: 9,
                 padding: 4,
               }}
               onPress={() => setShowPassword(!showPassword)}
@@ -231,8 +230,8 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
             <TouchableOpacity
               style={{
                 position: "absolute",
-                right: 16,
-                top: 12,
+                right: 12,
+                top: 9,
                 padding: 4,
               }}
               onPress={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -248,37 +247,12 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
 
         <AlertFormError error={currentError} />
 
-        <Button
-          theme="outlined"
+        <ButtonGradient
           onPress={handleSendVerification}
+          title="Inscription"
+          isLoading={currentLoading}
           disabled={currentLoading}
-          style={{
-            borderWidth: 0,
-            borderRadius: 12,
-            overflow: "hidden",
-          }}
-          color="#FFFFFF"
-        >
-          <LinearGradient
-            colors={[colors.gradientStart, colors.gradientEnd]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-            }}
-          />
-          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#FFFFFF" }}>
-            {sendLoading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              "Inscription"
-            )}
-          </Text>
-        </Button>
+        />
       </YStack>
 
       <VerificationModal

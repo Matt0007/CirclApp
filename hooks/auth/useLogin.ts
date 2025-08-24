@@ -14,7 +14,10 @@ interface LoginResponse {
     email: string;
     firstName: string;
     lastName: string;
+    userName: string;
+    profileImage?: string;
     createdAt: string;
+    updatedAt: string;
   };
   token: string;
 }

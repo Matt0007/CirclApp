@@ -13,6 +13,6 @@ export default {
     backgroundColor: "#D97706"
   },
   extra: {
-    apiUrl: process.env.API_URL || "https://60f368bf1369.ngrok-free.app"
+    apiUrl: process.env.API_URL || "http://192.168.1.172:3000"
   }
 };

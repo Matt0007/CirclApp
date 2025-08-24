@@ -7,10 +7,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { YStack, Text, Button } from "tamagui";
+import { YStack, Text } from "tamagui";
 import { useTheme } from "../../../contexts/ThemeContext";
 import { AlertFormError } from "../../alert";
 import CodeInput from "./CodeInput";
+import { ButtonGradient } from "../../common";
 
 interface VerificationModalProps {
   visible: boolean;
@@ -149,49 +150,28 @@ export default function VerificationModal({
                 <AlertFormError error={error} />
 
                 <YStack space="$3" width="100%">
-                  <Button
-                    theme="outlined"
+                  <ButtonGradient
                     onPress={handleResend}
+                    title="Renvoyer le code"
+                    isLoading={isLoading}
                     disabled={isLoading || countdown > 0}
-                    style={{
-                      backgroundColor:
-                        countdown > 0 ? "#cccccc" : colors.primary,
-                      borderColor: countdown > 0 ? "#cccccc" : colors.primary,
-                      borderWidth: 1,
-                      borderRadius: 12,
-                      opacity: countdown > 0 ? 0.7 : 1,
-                    }}
-                    color="#FFFFFF"
-                  >
-                    <Text style={{ fontWeight: "600", color: "#FFFFFF" }}>
-                      {countdown > 0
+                    loadingText={
+                      countdown > 0
                         ? `Renvoyer dans ${Math.floor(countdown / 60)}:${(
                             countdown % 60
                           )
                             .toString()
                             .padStart(2, "0")}`
-                        : "Renvoyer le code"}
-                    </Text>
-                  </Button>
+                        : "Renvoyer le code"
+                    }
+                  />
 
-                  <Button
-                    theme="outlined"
+                  <ButtonGradient
                     onPress={handleClose}
+                    title="Annuler"
                     disabled={isLoading}
-                    style={{
-                      backgroundColor: "transparent",
-                      borderColor: colors.border,
-                      borderWidth: 1,
-                      borderRadius: 12,
-                    }}
-                    color={colors.foreground}
-                  >
-                    <Text
-                      style={{ color: colors.foreground, fontWeight: "500" }}
-                    >
-                      Annuler
-                    </Text>
-                  </Button>
+                    variant="secondary"
+                  />
                 </YStack>
               </YStack>
             </View>
