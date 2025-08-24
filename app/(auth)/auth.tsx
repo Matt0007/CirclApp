@@ -14,8 +14,8 @@ import { useRouter } from "expo-router";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginForm, RegisterForm } from "../../components/form/auth";
-import GoogleLogo from "@/components/GoogleLogo";
-import FacebookLogo from "@/components/FacebookLogo";
+import GoogleLogo from "@/components/logo/GoogleLogo";
+import FacebookLogo from "@/components/logo/FacebookLogo";
 
 export default function Auth() {
   const { colors } = useTheme();

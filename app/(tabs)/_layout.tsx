@@ -2,8 +2,8 @@ import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { useTheme } from "../../contexts/ThemeContext";
-import { ProtectedRoute } from "../../components/ProtectedRoute";
-export default function TabsLayout() {
+import { ProtectedRoute } from "../../components/route/ProtectedRoute";
+export default function TabsLayout() {  
   const { colors } = useTheme();
 
   return (
