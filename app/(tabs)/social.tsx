@@ -2,7 +2,7 @@ import { SafeAreaView } from "react-native";
 import { Text } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 
-export default function Index() {
+export default function Social() {
   const { colors } = useTheme();
   return (
     <SafeAreaView
@@ -14,8 +14,10 @@ export default function Index() {
       }}
     >
       <Text style={{ textAlign: "center", fontSize: 24, fontWeight: "bold",
-          color: colors.foreground, }}>
-        Actualités
+          color: colors.foreground,
+        }}
+      >
+        Social
       </Text>
     </SafeAreaView>
   );

@@ -1,50 +1,126 @@
-# Welcome to your Expo app 👋
+# Circl App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Application mobile de gestion de projets avec système d'authentification et thèmes dynamiques.
 
-## Get started
+## Fonctionnalités
 
-1. Install dependencies
+### 🔐 Système d'Authentification
+- **Connexion/Inscription** : Interface moderne avec validation des champs
+- **Protection des routes** : Redirection automatique vers l'authentification si non connecté
+- **Persistance** : Stockage local des informations de connexion
+- **Gestion des états** : Loading, erreurs, et déconnexion
 
-   ```bash
-   npm install
-   ```
+### 🎨 Système de Thèmes
+- **Thèmes clair et sombre** : Adaptation automatique au système
+- **Couleurs OKLCH** : Palette de couleurs moderne et accessible
+- **Toggle manuel** : Possibilité de changer de thème manuellement
+- **Context global** : Accès aux couleurs depuis n'importe où dans l'app
 
-2. Start the app
+## Structure du Projet
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+CirclApp/
+├── app/
+│   ├── (auth)/
+│   │   └── auth.tsx          # Page d'authentification
+│   ├── _layout.tsx           # Layout principal avec contextes
+│   └── index.tsx             # Page d'accueil protégée
+├── components/
+│   ├── ProtectedRoute.tsx    # Composant de protection des routes
+│   └── ThemeToggle.tsx       # Toggle de thème
+├── contexts/
+│   ├── AuthContext.tsx       # Contexte d'authentification
+│   └── ThemeContext.tsx      # Contexte de thème
+├── types/
+│   └── index.ts              # Types TypeScript centralisés
+└── utils/
+    └── colors.ts             # Définition des couleurs OKLCH
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Utilisation
 
-## Learn more
+### Authentification
+```typescript
+import { useAuth } from '../contexts/AuthContext';
 
-To learn more about developing your project with Expo, look at the following resources:
+function MyComponent() {
+  const { user, isAuthenticated, login, logout } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Text>Veuillez vous connecter</Text>;
+  }
+  
+  return <Text>Bienvenue {user?.name}!</Text>;
+}
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Thème
+```typescript
+import { useTheme } from '../contexts/ThemeContext';
 
-## Join the community
+function MyComponent() {
+  const { colors, colorScheme, toggleTheme } = useTheme();
+  
+  return (
+    <View style={{ backgroundColor: colors.background }}>
+      <Text style={{ color: colors.foreground }}>
+        Thème actuel : {colorScheme}
+      </Text>
+      <TouchableOpacity onPress={toggleTheme}>
+        <Text>Changer de thème</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+```
 
-Join our community of developers creating universal apps.
+### Protection des Routes
+```typescript
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+export default function MyProtectedPage() {
+  return (
+    <ProtectedRoute>
+      <Text>Contenu protégé</Text>
+    </ProtectedRoute>
+  );
+}
+```
+
+## Installation
+
+1. Installer les dépendances :
+```bash
+npm install
+```
+
+2. Démarrer l'application :
+```bash
+npm start
+```
+
+## Dépendances Principales
+
+- `@react-native-async-storage/async-storage` : Stockage local
+- `expo-router` : Navigation
+- `react-native-safe-area-context` : Gestion des zones sûres
+- `tamagui` : Composants UI
+
+## Personnalisation
+
+### Ajouter de nouvelles couleurs
+Modifiez le fichier `utils/colors.ts` pour ajouter de nouvelles couleurs au thème.
+
+### Modifier l'interface d'authentification
+Personnalisez le composant `app/(auth)/auth.tsx` selon vos besoins.
+
+### Ajouter de nouvelles routes protégées
+Utilisez le composant `ProtectedRoute` autour de vos nouvelles pages.
+
+## Notes Techniques
+
+- Les couleurs utilisent le format OKLCH pour une meilleure accessibilité
+- L'authentification est simulée (remplacez par vos appels API)
+- Le thème s'adapte automatiquement au système d'exploitation
+- Tous les composants sont typés avec TypeScript
+# CirclApp
