@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { defaultConfig } from "@tamagui/config/v4";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { AuthProvider } from "../contexts/AuthContext";
+
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";

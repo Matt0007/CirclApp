@@ -1,6 +1,6 @@
 import React from "react";
 import { SafeAreaView, ScrollView } from "react-native";
-import { Text, View, XStack, YStack, Button, H2, Input, Label } from "tamagui";
+import { Text, View,  YStack, Button, H2, Input, Label } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { BackHeader } from "../../components/common/BackHeader";
 
@@ -55,7 +55,7 @@ export default function EditProfile() {
 
               <YStack space="$2">
                 <Label color={colors.foreground} fontSize="$3" fontWeight="500">
-                  Nom d'utilisateur
+                  Nom d&apos;utilisateur
                 </Label>
                 <Input
                   backgroundColor={colors.input}
