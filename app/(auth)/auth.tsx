@@ -16,8 +16,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { LoginForm, RegisterForm } from "../../components/form/auth";
 import GoogleLogo from "@/components/logo/GoogleLogo";
 import FacebookLogo from "@/components/logo/FacebookLogo";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { LinearGradient } from "expo-linear-gradient";
+
 
 export default function Auth() {
   const { colors } = useTheme();
@@ -83,49 +82,8 @@ export default function Auth() {
             paddingBottom="$8"
           >
             <YStack alignItems="center" space="$2">
-              <MaskedView
-                maskElement={
-                  <Text
-                    style={{
-                      fontSize: 64,
-                      fontWeight: "bold",
-                      fontFamily: "Signatra",
-                      textAlign: "center",
-                    }}
-                  >
-                    Circl
-                  </Text>
-                }
-              >
-                <LinearGradient
-                  colors={[colors.gradientStart, colors.gradientEnd]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{ height: 80, width: 300 }}
-                >
-                  {/* Un texte transparent pour occuper l'espace */}
-                  <Text
-                    style={{
-                      fontSize: 64,
-                      fontWeight: "bold",
-                      fontFamily: "Signatra",
-                      opacity: 0,
-                      textAlign: "center",
-                    }}
-                  >
-                    Circl
-                  </Text>
-                </LinearGradient>
-              </MaskedView>
-
-              <Text
-                style={{
-                  fontSize: 28,
-                  fontWeight: "bold",
-                  color: colors.foreground,
-                }}
-              >
-                {isLogin ? "Connexion" : "Inscription"}
+              <Text fontFamily="Signatra" fontSize={64} color={colors.primary}>
+                Circl
               </Text>
             </YStack>
 

@@ -1,113 +1,184 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import React from "react";
+import { ScrollView } from "react-native";
+import { Text, View, XStack, YStack, Button } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { useRouter } from "expo-router";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Profile() {
   const { colors } = useTheme();
-  const { user, logout, refreshUserData } = useAuth();
-  const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
 
-  const handleLogout = async () => {
-    await logout();
-    router.replace("/(auth)/auth");
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    content: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: 24,
-    },
-    title: {
-      fontSize: 28,
-      fontWeight: "bold",
-      color: colors.foreground,
-      marginBottom: 32,
-      textAlign: "center",
-    },
-    userInfo: {
-      backgroundColor: colors.card,
-      padding: 20,
-      borderRadius: 12,
-      marginBottom: 32,
-      borderWidth: 1,
-      borderColor: colors.border,
-      width: "100%",
-    },
-    userText: {
-      fontSize: 16,
-      color: colors.cardForeground,
-      marginBottom: 8,
-    },
-    logoutButton: {
-      backgroundColor: colors.destructive || "#EF4444",
-      paddingHorizontal: 24,
-      paddingVertical: 12,
-      borderRadius: 12,
-    },
-    logoutButtonText: {
-      color: "#FFFFFF",
-      fontSize: 16,
-      fontWeight: "bold",
-    },
-    themeToggle: {
-      marginBottom: 32,
-    },
-  });
+  // Rediriger vers la page d'authentification si l'utilisateur n'est pas connecté
+  if (!isAuthenticated || !user) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+        <View flex={1} justifyContent="center" alignItems="center" padding="$4">
+          <Text color={colors.foreground} fontSize="$5" marginBottom="$4">
+            Veuillez vous connecter pour voir votre profil
+          </Text>
+          <Button
+            backgroundColor={colors.primary}
+            color={colors.primaryForeground}
+            onPress={() => router.push("/(auth)/auth")}
+          >
+            Se connecter
+          </Button>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Profil</Text>
-
-        <View style={styles.userInfo}>
-          <Text style={styles.userText}>
-            Prénom : {user?.firstName || "Non défini"}
-          </Text>
-          <Text style={styles.userText}>
-            Nom : {user?.lastName || "Non défini"}
-          </Text>
-          <Text style={styles.userText}>
-            Nom d&apos;utilisateur : {user?.userName || "Non défini"}
-          </Text>
-          <Text style={styles.userText}>Email : {user?.email}</Text>
-          <Text style={styles.userText}>
-            Membre depuis :{" "}
-            {user?.createdAt
-              ? new Date(user.createdAt).toLocaleDateString("fr-FR")
-              : "Non défini"}
-          </Text>
-          <Text style={styles.userText}>
-            Image de profil :{" "}
-            {user?.profileImage ? "Configurée" : "Non configurée"}
-          </Text>
-        </View>
-        <View style={styles.themeToggle}>
-          <ThemeToggle />
-        </View>
-
-        <TouchableOpacity
-          style={[
-            styles.logoutButton,
-            { backgroundColor: colors.primary, marginBottom: 16 },
-          ]}
-          onPress={refreshUserData}
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header avec boutons d'action */}
+        <XStack
+          justifyContent="flex-end"
+          alignItems="center"
+          paddingHorizontal="$4"
+          paddingVertical="$3"
         >
-          <Text style={styles.logoutButtonText}>Actualiser le profil</Text>
-        </TouchableOpacity>
+          <XStack space="$2">
+            <Button
+              size="$3"
+              circular
+              borderRadius="$4"
+              backgroundColor={colors.card}
+              onPress={() => console.log("Share")}
+            >
+              <Ionicons
+                name="share-outline"
+                size={20}
+                color={colors.foreground}
+              />
+            </Button>
+            <Button
+              size="$3"
+              circular
+              borderRadius="$4"
+              backgroundColor={colors.card}
+              onPress={() => console.log("Edit")}
+            >
+              <Ionicons
+                name="pencil-sharp"
+                size={20}
+                color={colors.foreground}
+              />
+            </Button>
+            <Button
+              size="$3"
+              circular
+              borderRadius="$4"
+              backgroundColor={colors.card}
+              onPress={() => router.push("/(backPage)/settings")}
+            >
+              <Ionicons
+                name="settings-outline"
+                size={20}
+                color={colors.foreground}
+              />
+            </Button>
+          </XStack>
+        </XStack>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Se déconnecter</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Section principale du profil */}
+        <YStack paddingHorizontal="$4" space="$4">
+          {/* Informations du profil */}
+          <XStack space="$4" alignItems="center">
+            {/* Avatar avec image réelle */}
+            <View
+              width={80}
+              height={80}
+              borderRadius={40}
+              overflow="hidden"
+              backgroundColor={colors.accent}
+            >
+              {user.profileImage ? (
+                <View
+                  width="100%"
+                  height="100%"
+                  backgroundColor={colors.accent}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Ionicons
+                    name="person"
+                    size={40}
+                    color={colors.mutedForeground}
+                  />
+                </View>
+              ) : (
+                <View
+                  width="100%"
+                  height="100%"
+                  backgroundColor={colors.accent}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Ionicons
+                    name="person"
+                    size={40}
+                    color={colors.mutedForeground}
+                  />
+                </View>
+              )}
+            </View>
+
+            {/* Détails utilisateur avec vraies données */}
+            <YStack flex={1} space="$2" >
+              <XStack>
+                <Text color={colors.foreground} fontSize="$5" fontWeight="bold">
+                  {user.firstName} {user.lastName}
+                </Text>
+              </XStack>
+
+              {/* Trois statistiques - pour l'instant avec des valeurs par défaut */}
+              <XStack space="$4" marginTop="$2">
+                <YStack  flex={1}>
+                  <Text
+                    color={colors.foreground}
+                    fontSize="$4"
+                    fontWeight="bold"
+                  >
+                    0
+                  </Text>
+                  <Text color={colors.mutedForeground} fontSize="$2">
+                    Posts
+                  </Text>
+                </YStack>
+                <YStack  flex={1}>
+                  <Text
+                    color={colors.foreground}
+                    fontSize="$4"
+                    fontWeight="bold"
+                  >
+                    0
+                  </Text>
+                  <Text color={colors.mutedForeground} fontSize="$2">
+                    Followers
+                  </Text>
+                </YStack>
+                <YStack  flex={1}>
+                  <Text
+                    
+                    color={colors.foreground}
+                    fontSize="$4"
+                    fontWeight="bold"
+                  >
+                    0
+                  </Text>
+                  <Text color={colors.mutedForeground} fontSize="$2">
+                    Following
+                  </Text>
+                </YStack>
+              </XStack>
+            </YStack>
+          </XStack>
+        </YStack>
+      </ScrollView>
     </SafeAreaView>
   );
 }

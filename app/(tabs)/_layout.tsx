@@ -1,10 +1,12 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../../contexts/ThemeContext";
 import { ProtectedRoute } from "../../components/route/ProtectedRoute";
-export default function TabsLayout() {  
+export default function TabsLayout() {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <ProtectedRoute>
@@ -18,6 +20,8 @@ export default function TabsLayout() {
             backgroundColor: colors.card,
             borderTopWidth: 1,
             borderTopColor: colors.border,
+            paddingBottom: insets.bottom,
+            height: 60 + insets.bottom,
           },
           tabBarIconStyle: {
             marginTop: 10,
