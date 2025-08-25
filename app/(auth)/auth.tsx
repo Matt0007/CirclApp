@@ -16,6 +16,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { LoginForm, RegisterForm } from "../../components/form/auth";
 import GoogleLogo from "@/components/logo/GoogleLogo";
 import FacebookLogo from "@/components/logo/FacebookLogo";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Auth() {
   const { colors } = useTheme();
@@ -81,16 +83,40 @@ export default function Auth() {
             paddingBottom="$8"
           >
             <YStack alignItems="center" space="$2">
-              <Text
-                style={{
-                  fontSize: 64,
-                  fontWeight: "bold",
-                  fontFamily: "Signatra",
-                  color: colors.primary,
-                }}
+              <MaskedView
+                maskElement={
+                  <Text
+                    style={{
+                      fontSize: 64,
+                      fontWeight: "bold",
+                      fontFamily: "Signatra",
+                      textAlign: "center",
+                    }}
+                  >
+                    Circl
+                  </Text>
+                }
               >
-                Circl
-              </Text>
+                <LinearGradient
+                  colors={[colors.gradientStart, colors.gradientEnd]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{ height: 80, width: 300 }}
+                >
+                  {/* Un texte transparent pour occuper l'espace */}
+                  <Text
+                    style={{
+                      fontSize: 64,
+                      fontWeight: "bold",
+                      fontFamily: "Signatra",
+                      opacity: 0,
+                      textAlign: "center",
+                    }}
+                  >
+                    Circl
+                  </Text>
+                </LinearGradient>
+              </MaskedView>
 
               <Text
                 style={{
@@ -100,16 +126,6 @@ export default function Auth() {
                 }}
               >
                 {isLogin ? "Connexion" : "Inscription"}
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: colors.mutedForeground,
-                  textAlign: "center",
-                }}
-              >
-                {isLogin ? "Connecte-toi à ton Circl" : "Crée ton compte Circl"}
               </Text>
             </YStack>
 
@@ -123,7 +139,11 @@ export default function Auth() {
             <YStack space="$4">
               <XStack alignItems="center" justifyContent="center" space="$2">
                 <View
-                  style={{ flex: 1, height: 1, backgroundColor: colors.border }}
+                  style={{
+                    flex: 1,
+                    height: 1.5,
+                    backgroundColor: colors.border,
+                  }}
                 />
                 <Text
                   style={{
@@ -134,7 +154,11 @@ export default function Auth() {
                   ou
                 </Text>
                 <View
-                  style={{ flex: 1, height: 1, backgroundColor: colors.border }}
+                  style={{
+                    flex: 1,
+                    height: 1.5,
+                    backgroundColor: colors.border,
+                  }}
                 />
               </XStack>
 
