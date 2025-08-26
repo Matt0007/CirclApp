@@ -44,7 +44,7 @@ export default function Index() {
           backgroundColor: colors.background,
         }}
       >
-        <Text fontSize="24" fontWeight="bold">
+        <Text fontSize="24" fontWeight="bold" color={colors.foreground}>
           Actualités
         </Text>
       </View>

@@ -13,7 +13,11 @@ export default function Social() {
         backgroundColor: colors.background,
       }}
     >
-      <Text style={{ textAlign: "center", fontSize: 24, fontWeight: "bold",
+      <Text
+        style={{
+          textAlign: "center",
+          fontSize: 24,
+          fontWeight: "bold",
           color: colors.foreground,
         }}
       >
