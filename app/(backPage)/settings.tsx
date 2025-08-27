@@ -24,7 +24,7 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} >
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <BackHeader title="Paramètres" />
 
       <ScrollView

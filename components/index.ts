@@ -1,5 +1,6 @@
 // Form components
 export * from "./form/auth";
+export * from "./profileForm";
 
 // Common components
 export * from "./common";
@@ -7,11 +8,5 @@ export * from "./common";
 // Alert components
 export * from "./alert";
 
-// Logo components
-export * from "./logo";
-
-// Route components
-export * from "./route";
-
 // Other components
-export { default as ThemeToggle } from "./ThemeToggle";
+export { ThemeToggle } from "./ThemeToggle";

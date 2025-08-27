@@ -17,7 +17,6 @@ import { LoginForm, RegisterForm } from "../../components/form/auth";
 import GoogleLogo from "@/components/logo/GoogleLogo";
 import FacebookLogo from "@/components/logo/FacebookLogo";
 
-
 export default function Auth() {
   const { colors } = useTheme();
   const { login: authLogin } = useAuth();
@@ -40,8 +39,8 @@ export default function Auth() {
       email: result.user.email,
       token: result.token,
     });
-    // Rediriger vers les onglets après inscription réussie
-    router.replace("/(tabs)");
+    // Rediriger vers la page de complétion du profil combinée après inscription réussie
+    router.replace("/complete-profil-combined");
   };
 
   const handleGoogleLogin = async () => {

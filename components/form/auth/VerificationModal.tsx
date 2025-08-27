@@ -149,12 +149,13 @@ export default function VerificationModal({
 
                 <AlertFormError error={error} />
 
-                <YStack space="$3" width="100%">
+                <YStack space="$4" width="100%">
                   <ButtonGradient
                     onPress={handleResend}
                     title="Renvoyer le code"
                     isLoading={isLoading}
                     disabled={isLoading || countdown > 0}
+                    size="large"
                     loadingText={
                       countdown > 0
                         ? `Renvoyer dans ${Math.floor(countdown / 60)}:${(
@@ -171,6 +172,7 @@ export default function VerificationModal({
                     title="Annuler"
                     disabled={isLoading}
                     variant="secondary"
+                    size="large"
                   />
                 </YStack>
               </YStack>

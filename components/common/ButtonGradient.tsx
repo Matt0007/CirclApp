@@ -27,18 +27,18 @@ export default function ButtonGradient({
   const getSizeStyles = () => {
     switch (size) {
       case "small":
-        return { paddingVertical: 8, paddingHorizontal: 16 };
+        return { paddingVertical: 8, paddingHorizontal: 16, minWidth: 80 };
       case "large":
-        return { paddingVertical: 16, paddingHorizontal: 32 };
+        return { paddingVertical: 16, paddingHorizontal: 32, minWidth: 140 };
       default: // medium
-        return { paddingVertical: 12, paddingHorizontal: 24 };
+        return { paddingVertical: 12, paddingHorizontal: 24, minWidth: 100 };
     }
   };
 
   const getVariantStyles = () => {
     if (variant === "secondary") {
       return {
-        backgroundColor: "transparent",
+        backgroundColor: colors.card,
         borderColor: colors.border,
         borderWidth: 1,
       };
@@ -51,6 +51,25 @@ export default function ButtonGradient({
       return colors.foreground;
     }
     return "#FFFFFF";
+  };
+
+  const getShadowStyles = () => {
+    if (variant === "secondary") {
+      return {
+        shadowColor: colors.border,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 2,
+      };
+    }
+    return {
+      shadowColor: colors.gradientStart,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 6,
+    };
   };
 
   const getGradientColors = () => {
@@ -70,6 +89,7 @@ export default function ButtonGradient({
         position: "relative",
         opacity: disabled ? 0.6 : 1,
         ...getVariantStyles(),
+        ...getShadowStyles(),
       }}
       activeOpacity={0.8}
     >
@@ -93,6 +113,7 @@ export default function ButtonGradient({
           ...getSizeStyles(),
           alignItems: "center",
           justifyContent: "center",
+          minHeight: 44, // Hauteur minimale pour éviter la coupure
         }}
       >
         {isLoading ? (
@@ -103,7 +124,12 @@ export default function ButtonGradient({
               fontSize: 16,
               fontWeight: "bold",
               color: getTextColor(),
+              textAlign: "center",
+              flexShrink: 1, // Permet au texte de se rétrécir si nécessaire
             }}
+            numberOfLines={1} // Force le texte sur une seule ligne
+            adjustsFontSizeToFit={true} // Ajuste automatiquement la taille de la police
+            minimumFontScale={0.8} // Taille minimale de police (80% de la taille originale)
           >
             {loadingText || title}
           </Text>
