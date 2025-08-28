@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { YStack, Text, XStack } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, Dimensions, View } from "react-native";
+import { ScrollView, Dimensions, View, ActivityIndicator } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { useRouter } from "expo-router";
 import {
@@ -10,6 +10,7 @@ import {
   SportInput,
 } from "../components/profileForm";
 import ButtonGradient from "../components/common/ButtonGradient";
+import { useCompleteProfile } from "../hooks";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -17,6 +18,7 @@ export default function CompleteProfilCombined() {
   const { colors } = useTheme();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
+  const { isSubmitting, completeProfile } = useCompleteProfile();
 
   // État pour l'étape actuelle
   const [currentStep, setCurrentStep] = useState(1);
@@ -58,17 +60,23 @@ export default function CompleteProfilCombined() {
     }
   };
 
-  const handleFinish = () => {
-    // Logique pour finaliser le profil
-    console.log("Profil complété:", {
-      profileImage,
+  const handleFinish = async () => {
+    // Préparer les données du profil
+    const profileData = {
       gender,
       birthDate,
       city,
       selectedSports,
-    });
-    // Rediriger vers la page principale
-    router.replace("/(tabs)");
+      profileImage,
+    };
+
+    // Utiliser le hook pour finaliser le profil
+    const success = await completeProfile(profileData);
+
+    if (success) {
+      // Rediriger vers la page principale
+      router.replace("/(tabs)");
+    }
   };
 
   // Calcul de la progression basé sur l'étape actuelle
@@ -213,6 +221,7 @@ export default function CompleteProfilCombined() {
                 title="Finaliser le profil"
                 onPress={handleFinish}
                 disabled={!isStep2Valid}
+                isLoading={isSubmitting}
                 size="large"
               />
             </View>
