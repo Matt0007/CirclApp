@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   TouchableOpacity,
@@ -33,44 +33,83 @@ export const CityInput: React.FC<CityInputProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isValidCity, setIsValidCity] = useState<boolean>(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleCityChange = async (text: string) => {
     setSearchQuery(text);
 
+    // Debouncing : annuler la requête précédente
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
     if (text.length > 2) {
-      setIsLoadingCities(true);
-      try {
-        // API officielle française pour les communes
-        const response = await fetch(
-          `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(
-            text
-          )}&fields=nom,population&format=json&geometry=centre`
-        );
+      // Lancer la recherche après 400ms d'inactivité
+      searchTimeoutRef.current = setTimeout(async () => {
+        setIsLoadingCities(true);
+        try {
+          // API officielle française pour les communes
+          const response = await fetch(
+            `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(
+              text
+            )}&fields=nom,population&format=json&geometry=centre`
+          );
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.length > 0) {
-            // Trier par population décroissante (villes d'abord, puis communes)
-            const sortedCities = data
-              .filter((item: any) =>
-                item.nom.toLowerCase().includes(text.toLowerCase())
-              )
-              .sort((a: any, b: any) => {
-                // Si pas de population, mettre à la fin
-                if (!a.population && !b.population) return 0;
-                if (!a.population) return 1;
-                if (!b.population) return -1;
-                // Trier par population décroissante
-                return b.population - a.population;
-              })
-              .map((item: any) => item.nom)
-              .slice(0, 20); // Limiter à 20 suggestions
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.length > 0) {
+              // Trier par population décroissante (villes d'abord, puis communes)
+              const sortedCities = data
+                .filter((item: any) =>
+                  item.nom.toLowerCase().includes(text.toLowerCase())
+                )
+                .sort((a: any, b: any) => {
+                  // Si pas de population, mettre à la fin
+                  if (!a.population && !b.population) return 0;
+                  if (!a.population) return 1;
+                  if (!b.population) return 1;
+                  // Trier par population décroissante
+                  return b.population - a.population;
+                })
+                .map((item: any) => item.nom)
+                .slice(0, 20); // Limiter à 20 suggestions
 
-            setCitySuggestions(sortedCities);
+              setCitySuggestions(sortedCities);
+            } else {
+              setCitySuggestions([]);
+            }
           } else {
-            setCitySuggestions([]);
+            // Fallback local en cas d'erreur
+            const fallbackCities = [
+              "Paris",
+              "Marseille",
+              "Lyon",
+              "Toulouse",
+              "Nice",
+              "Nantes",
+              "Strasbourg",
+              "Bordeaux",
+              "Lille",
+              "Rennes",
+              "Reims",
+              "Saint-Étienne",
+              "Toulon",
+              "Le Havre",
+              "Grenoble",
+              "Dijon",
+              "Angers",
+              "Villeurbanne",
+              "Le Mans",
+              "Aix-en-Provence",
+            ];
+
+            const filteredCities = fallbackCities.filter((cityOption) =>
+              cityOption.toLowerCase().includes(text.toLowerCase())
+            );
+            setCitySuggestions(filteredCities);
           }
-        } else {
+        } catch {
+          console.log("Erreur API, utilisation du fallback local");
           // Fallback local en cas d'erreur
           const fallbackCities = [
             "Paris",
@@ -99,40 +138,10 @@ export const CityInput: React.FC<CityInputProps> = ({
             cityOption.toLowerCase().includes(text.toLowerCase())
           );
           setCitySuggestions(filteredCities);
+        } finally {
+          setIsLoadingCities(false);
         }
-      } catch {
-        console.log("Erreur API, utilisation du fallback local");
-        // Fallback local en cas d'erreur
-        const fallbackCities = [
-          "Paris",
-          "Marseille",
-          "Lyon",
-          "Toulouse",
-          "Nice",
-          "Nantes",
-          "Strasbourg",
-          "Bordeaux",
-          "Lille",
-          "Rennes",
-          "Reims",
-          "Saint-Étienne",
-          "Toulon",
-          "Le Havre",
-          "Grenoble",
-          "Dijon",
-          "Angers",
-          "Villeurbanne",
-          "Le Mans",
-          "Aix-en-Provence",
-        ];
-
-        const filteredCities = fallbackCities.filter((cityOption) =>
-          cityOption.toLowerCase().includes(text.toLowerCase())
-        );
-        setCitySuggestions(filteredCities);
-      } finally {
-        setIsLoadingCities(false);
-      }
+      }, 400);
     } else {
       setCitySuggestions([]);
     }
@@ -145,13 +154,19 @@ export const CityInput: React.FC<CityInputProps> = ({
     onValidationChange?.(true);
     setCitySuggestions([]);
     setShowDropdown(false);
+    // Annuler le timeout de recherche en cours
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
     onCitySelect?.(cityOption);
   };
 
   const handleDropdownToggle = () => {
     if (!showDropdown) {
+      // Reset des états à l'ouverture
       setSearchQuery("");
       setCitySuggestions([]);
+      setIsValidCity(false);
     }
     setShowDropdown(!showDropdown);
   };
@@ -160,6 +175,11 @@ export const CityInput: React.FC<CityInputProps> = ({
     setShowDropdown(false);
     setCitySuggestions([]);
     setSearchQuery("");
+    setIsValidCity(false);
+    // Annuler le timeout de recherche en cours
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
     Keyboard.dismiss();
   };
 

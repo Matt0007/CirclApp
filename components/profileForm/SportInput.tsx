@@ -15,8 +15,14 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../contexts/ThemeContext";
 import ButtonGradient from "../common/ButtonGradient";
-import { SPORTS_DATABASE, type SportDB } from "../../data/sportsDatabase";
+import { API_BASE_URL } from "../../config/api";
 
+// Interface pour les sports de l'API
+interface SportDB {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
 interface Sport {
   name: string;
   icon: string;
@@ -213,7 +219,10 @@ export const SportInput: React.FC<SportInputProps> = ({
   const [customSports, setCustomSports] = useState<Sport[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searchResults, setSearchResults] = useState<SportDB[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const translateYAnim = useRef(new Animated.Value(0)).current;
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Gestion du clavier pour ajuster la position de la modal avec animation fluide
   useEffect(() => {
@@ -266,17 +275,46 @@ export const SportInput: React.FC<SportInputProps> = ({
     }
   };
 
-  // Fonction pour filtrer les sports selon la recherche
-  const getFilteredSports = () => {
-    if (!searchQuery.trim() || searchQuery.trim().length < 3) {
-      return []; // Retourner un tableau vide si moins de 3 caractères
+  // Fonction pour rechercher des sports via l'API
+  const searchSports = async (query: string) => {
+    if (!query.trim() || query.trim().length < 3) {
+      setSearchResults([]);
+      return;
     }
 
-    return SPORTS_DATABASE.filter(
-      (sport) =>
-        sport.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        sport.category.toLowerCase().includes(searchQuery.toLowerCase())
-    ).slice(0, 15); // Limiter à 15 résultats de recherche
+    setIsSearching(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/sports/search?query=${encodeURIComponent(
+          query.trim()
+        )}&limit=15`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Filtrer les sports déjà affichés dans la liste principale
+        const filteredData = data.filter(
+          (apiSport: SportDB) =>
+            !sports.some(
+              (sport) =>
+                sport.name.toLowerCase() === apiSport.name.toLowerCase()
+            )
+        );
+        setSearchResults(filteredData);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la recherche des sports:", error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Fonction pour filtrer les sports selon la recherche (maintenue pour compatibilité)
+  const getFilteredSports = () => {
+    return searchResults;
   };
 
   // Fonction pour sélectionner un sport
@@ -308,7 +346,7 @@ export const SportInput: React.FC<SportInputProps> = ({
       name: selectedSport.name,
       icon: "plus", // Icône par défaut
       library: "MaterialCommunityIcons",
-      category: selectedSport.category,
+      category: "Autre", // Catégorie par défaut pour les sports ajoutés
     };
 
     setCustomSports((prev) => [...prev, newSport]);
@@ -436,7 +474,14 @@ export const SportInput: React.FC<SportInputProps> = ({
 
         {/* Bouton "Autre" pour ajouter des sports personnalisés */}
         <TouchableOpacity
-          onPress={() => setShowModal(true)}
+          onPress={() => {
+            setShowModal(true);
+            // Reset des états de recherche à l'ouverture
+            setSearchQuery("");
+            setSearchResults([]);
+            setSelectedSport(null);
+            setShowDropdown(false);
+          }}
           style={{
             paddingHorizontal: 12,
             paddingVertical: 8,
@@ -480,7 +525,15 @@ export const SportInput: React.FC<SportInputProps> = ({
           activeOpacity={1}
           onPress={() => {
             setShowModal(false);
-            setShowDropdown(false); // Fermer aussi le select
+            setShowDropdown(false);
+            // Reset complet des états à la fermeture
+            setSearchQuery("");
+            setSearchResults([]);
+            setSelectedSport(null);
+            // Annuler le timeout de recherche en cours
+            if (searchTimeoutRef.current) {
+              clearTimeout(searchTimeoutRef.current);
+            }
           }}
         >
           <Animated.View
@@ -608,7 +661,19 @@ export const SportInput: React.FC<SportInputProps> = ({
                       />
                       <TextInput
                         value={searchQuery}
-                        onChangeText={setSearchQuery}
+                        onChangeText={(text) => {
+                          setSearchQuery(text);
+
+                          // Debouncing : annuler la requête précédente
+                          if (searchTimeoutRef.current) {
+                            clearTimeout(searchTimeoutRef.current);
+                          }
+
+                          // Lancer la recherche après 500ms d'inactivité
+                          searchTimeoutRef.current = setTimeout(() => {
+                            searchSports(text);
+                          }, 400);
+                        }}
                         placeholder="Rechercher un sport..."
                         placeholderTextColor={colors.mutedForeground}
                         style={{
@@ -625,7 +690,18 @@ export const SportInput: React.FC<SportInputProps> = ({
                       keyboardShouldPersistTaps="always"
                       style={{ maxHeight: 200 }}
                     >
-                      {getFilteredSports().length > 0 ? (
+                      {isSearching ? (
+                        <View
+                          style={{
+                            padding: 20,
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text fontSize={14} color={colors.mutedForeground}>
+                            Recherche en cours...
+                          </Text>
+                        </View>
+                      ) : getFilteredSports().length > 0 ? (
                         getFilteredSports().map((sport, index) => (
                           <TouchableOpacity
                             key={index}
@@ -693,8 +769,13 @@ export const SportInput: React.FC<SportInputProps> = ({
                   onPress={() => {
                     setSelectedSport(null);
                     setSearchQuery("");
+                    setSearchResults([]);
                     setShowDropdown(false);
                     setShowModal(false);
+                    // Annuler le timeout de recherche en cours
+                    if (searchTimeoutRef.current) {
+                      clearTimeout(searchTimeoutRef.current);
+                    }
                   }}
                   style={{
                     paddingVertical: 12,
