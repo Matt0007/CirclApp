@@ -58,12 +58,6 @@ export const SPORTS_DATABASE: SportDB[] = [
     season: "Été",
   },
   {
-    name: "Natation",
-    category: "Olympiques Été",
-    olympic: true,
-    season: "Été",
-  },
-  {
     name: "Plongeon",
     category: "Olympiques Été",
     olympic: true,
@@ -81,7 +75,6 @@ export const SPORTS_DATABASE: SportDB[] = [
     olympic: true,
     season: "Été",
   },
-  { name: "Tennis", category: "Olympiques Été", olympic: true, season: "Été" },
   {
     name: "Tennis de table",
     category: "Olympiques Été",
@@ -95,31 +88,13 @@ export const SPORTS_DATABASE: SportDB[] = [
     season: "Été",
   },
   {
-    name: "Volleyball",
-    category: "Olympiques Été",
-    olympic: true,
-    season: "Été",
-  },
-  {
     name: "Beach volley",
     category: "Olympiques Été",
     olympic: true,
     season: "Été",
   },
   {
-    name: "Basketball",
-    category: "Olympiques Été",
-    olympic: true,
-    season: "Été",
-  },
-  {
     name: "Handball",
-    category: "Olympiques Été",
-    olympic: true,
-    season: "Été",
-  },
-  {
-    name: "Football",
     category: "Olympiques Été",
     olympic: true,
     season: "Été",
@@ -145,15 +120,12 @@ export const SPORTS_DATABASE: SportDB[] = [
   { name: "VTT", category: "Olympiques Été", olympic: true, season: "Été" },
   { name: "BMX", category: "Olympiques Été", olympic: true, season: "Été" },
   { name: "Escrime", category: "Olympiques Été", olympic: true, season: "Été" },
-  { name: "Judo", category: "Olympiques Été", olympic: true, season: "Été" },
-  { name: "Karaté", category: "Olympiques Été", olympic: true, season: "Été" },
   {
     name: "Taekwondo",
     category: "Olympiques Été",
     olympic: true,
     season: "Été",
   },
-  { name: "Boxe", category: "Olympiques Été", olympic: true, season: "Été" },
   {
     name: "Lutte gréco-romaine",
     category: "Olympiques Été",
@@ -198,20 +170,12 @@ export const SPORTS_DATABASE: SportDB[] = [
     season: "Été",
   },
   { name: "Voile", category: "Olympiques Été", olympic: true, season: "Été" },
-  { name: "Surf", category: "Olympiques Été", olympic: true, season: "Été" },
-  {
-    name: "Skateboard",
-    category: "Olympiques Été",
-    olympic: true,
-    season: "Été",
-  },
   {
     name: "Escalade sportive",
     category: "Olympiques Été",
     olympic: true,
     season: "Été",
   },
-  { name: "Golf", category: "Olympiques Été", olympic: true, season: "Été" },
   { name: "Tir", category: "Olympiques Été", olympic: true, season: "Été" },
   {
     name: "Tir à l'arc",
@@ -403,7 +367,6 @@ export const SPORTS_DATABASE: SportDB[] = [
   { name: "Speedball", category: "Sports collectifs" },
 
   // Sports de combat
-  { name: "MMA", category: "Sports de combat" },
   { name: "Kickboxing", category: "Sports de combat" },
   { name: "Muay Thai", category: "Sports de combat" },
   { name: "Boxe française savate", category: "Sports de combat" },
@@ -542,11 +505,9 @@ export const SPORTS_DATABASE: SportDB[] = [
 
   // Sports urbains/moderne
   { name: "Street workout", category: "Sports urbains/moderne" },
-  { name: "CrossFit", category: "Sports urbains/moderne" },
   { name: "Functional training", category: "Sports urbains/moderne" },
   { name: "Fitness cardio", category: "Sports urbains/moderne" },
   { name: "Zumba", category: "Sports urbains/moderne" },
-  { name: "Pilates", category: "Sports urbains/moderne" },
   { name: "Pole dance sport", category: "Sports urbains/moderne" },
   { name: "Cheerleading", category: "Sports urbains/moderne" },
   { name: "Double dutch", category: "Sports urbains/moderne" },
@@ -592,7 +553,6 @@ export const SPORTS_DATABASE: SportDB[] = [
   { name: "Catch-as-catch-can", category: "Sports traditionnels/régionaux" },
   { name: "Backhold wrestling", category: "Sports traditionnels/régionaux" },
   { name: "Pencak silat", category: "Sports traditionnels/régionaux" },
-  { name: "Okichitaw", category: "Sports traditionnels/régionaux" },
   { name: "Lutte bretonne gouren", category: "Sports traditionnels/régionaux" },
   { name: "Glima islandaise", category: "Sports traditionnels/régionaux" },
   { name: "Hurling gaélique", category: "Sports traditionnels/régionaux" },

@@ -132,6 +132,7 @@ export default function CompleteProfilCombined() {
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false}
         style={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Étape 1 */}
         <View style={{ width: screenWidth }}>

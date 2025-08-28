@@ -301,69 +301,71 @@ export const CityInput: React.FC<CityInputProps> = ({
               keyboardShouldPersistTaps="always"
               style={{ maxHeight: 200 }}
             >
-              {isLoadingCities ? (
-                <View
-                  style={{
-                    padding: 20,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text fontSize={14} color={colors.mutedForeground}>
-                    🔍 Recherche en cours...
-                  </Text>
-                </View>
-              ) : citySuggestions.length > 0 ? (
-                citySuggestions.map((cityOption: string, index: number) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => handleCitySelect(cityOption)}
+              <YStack>
+                {isLoadingCities ? (
+                  <View
                     style={{
-                      padding: 12,
-                      borderBottomWidth:
-                        index < citySuggestions.length - 1 ? 1 : 0,
-                      borderBottomColor: colors.border,
-                      backgroundColor:
-                        cityOption === value
-                          ? colors.primary + "20"
-                          : "transparent",
+                      padding: 20,
+                      alignItems: "center",
                     }}
                   >
-                    <Text
-                      color={
-                        cityOption === value
-                          ? colors.primary
-                          : colors.foreground
-                      }
-                      fontSize={14}
-                      fontWeight="500"
-                    >
-                      {cityOption}
+                    <Text fontSize={14} color={colors.mutedForeground}>
+                      🔍 Recherche en cours...
                     </Text>
-                  </TouchableOpacity>
-                ))
-              ) : searchQuery.length > 2 ? (
-                <View
-                  style={{
-                    padding: 20,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text fontSize={14} color={colors.mutedForeground}>
-                    Aucune ville trouvée avec ce nom
-                  </Text>
-                </View>
-              ) : (
-                <View
-                  style={{
-                    padding: 20,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text fontSize={14} color={colors.mutedForeground}>
-                    Tapez au moins 3 caractères pour rechercher
-                  </Text>
-                </View>
-              )}
+                  </View>
+                ) : citySuggestions.length > 0 ? (
+                  citySuggestions.map((cityOption: string, index: number) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handleCitySelect(cityOption)}
+                      style={{
+                        padding: 12,
+                        borderBottomWidth:
+                          index < citySuggestions.length - 1 ? 1 : 0,
+                        borderBottomColor: colors.border,
+                        backgroundColor:
+                          cityOption === value
+                            ? colors.primary + "20"
+                            : "transparent",
+                      }}
+                    >
+                      <Text
+                        color={
+                          cityOption === value
+                            ? colors.primary
+                            : colors.foreground
+                        }
+                        fontSize={14}
+                        fontWeight="500"
+                      >
+                        {cityOption}
+                      </Text>
+                    </TouchableOpacity>
+                  ))
+                ) : searchQuery.length > 2 ? (
+                  <View
+                    style={{
+                      padding: 20,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text fontSize={14} color={colors.mutedForeground}>
+                      Aucune ville trouvée avec ce nom
+                    </Text>
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      padding: 20,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text fontSize={14} color={colors.mutedForeground}>
+                      Tapez au moins 3 caractères pour rechercher
+                    </Text>
+                  </View>
+                )}
+              </YStack>
             </ScrollView>
           </View>
         )}
