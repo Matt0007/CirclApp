@@ -444,17 +444,12 @@ export const SportInput: React.FC<SportInputProps> = ({
             borderWidth: 2,
             borderStyle: "dashed",
             borderColor: colors.primary,
-            backgroundColor: colors.primary + "10",
+            backgroundColor: colors.primary + "20",
             flexDirection: "row",
             alignItems: "center",
             gap: 6,
             minWidth: 100,
             justifyContent: "center",
-            shadowColor: colors.primary,
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.2,
-            shadowRadius: 2,
-            elevation: 2,
           }}
         >
           <MaterialCommunityIcons

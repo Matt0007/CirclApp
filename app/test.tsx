@@ -1,7 +1,7 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CityInput } from "../components/profileForm/CityInput";
-import { ScrollView, View } from "react-native";
+import { ScrollView} from "react-native";
 import { YStack } from "tamagui";
 
 export default function Test() {

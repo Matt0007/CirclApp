@@ -179,9 +179,9 @@ export const CityInput: React.FC<CityInputProps> = ({
             borderWidth: 1,
             borderColor:
               value && isValidCity
-                ? "#22c55e" // Vert quand ville valide
+                ? colors.primary // Vert quand ville valide
                 : value && !isValidCity
-                ? "#ef4444" // Rouge quand ville invalide
+                ? colors.destructive // Rouge quand ville invalide
                 : colors.border, // Bordure normale par défaut
             borderRadius: 12,
             backgroundColor: colors.card,
@@ -206,7 +206,7 @@ export const CityInput: React.FC<CityInputProps> = ({
                   width: 20,
                   height: 20,
                   borderRadius: 10,
-                  backgroundColor: "#22c55e",
+                  backgroundColor: colors.primary,
                   justifyContent: "center",
                   alignItems: "center",
                   marginRight: 8,
