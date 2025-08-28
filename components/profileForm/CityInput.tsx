@@ -218,7 +218,7 @@ export const CityInput: React.FC<CityInputProps> = ({
               fontSize={16}
               flex={1}
             >
-              {value || placeholder}
+              {value || t("searchCity")}
             </Text>
 
             {/* Icône de validation */}

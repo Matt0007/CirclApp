@@ -27,7 +27,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   onBirthDateChange,
 }) => {
   const { colors, colorScheme } = useTheme();
-  const { t, locale } = useLocalization();
+  const { t } = useLocalization();
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date>(
     birthDate || new Date()

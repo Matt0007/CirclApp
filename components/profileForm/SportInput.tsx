@@ -45,31 +45,31 @@ export const SportInput: React.FC<SportInputProps> = ({
   sports = [
     // Sports de ballon
     {
-      name: "Football",
+      name: "football",
       icon: "soccer",
       library: "MaterialCommunityIcons",
       category: "Sports de ballon",
     },
     {
-      name: "Basketball",
+      name: "basketball",
       icon: "basketball",
       library: "MaterialCommunityIcons",
       category: "Sports de ballon",
     },
     {
-      name: "Tennis",
+      name: "tennis",
       icon: "tennis",
       library: "MaterialCommunityIcons",
       category: "Sports de ballon",
     },
     {
-      name: "Volley",
+      name: "volleyball",
       icon: "volleyball",
       library: "MaterialCommunityIcons",
       category: "Sports de ballon",
     },
     {
-      name: "Rugby",
+      name: "rugby",
       icon: "sports-rugby",
       library: "MaterialIcons",
       category: "Sports de ballon",
@@ -77,31 +77,31 @@ export const SportInput: React.FC<SportInputProps> = ({
 
     // Sports d'endurance
     {
-      name: "Course à pied",
+      name: "running",
       icon: "directions-run",
       library: "MaterialIcons",
       category: "Sports d'endurance",
     },
     {
-      name: "Vélo",
+      name: "cycling",
       icon: "directions-bike",
       library: "MaterialIcons",
       category: "Sports d'endurance",
     },
     {
-      name: "Natation",
+      name: "swimming",
       icon: "pool",
       library: "MaterialIcons",
       category: "Sports d'endurance",
     },
     {
-      name: "Randonnée",
+      name: "hiking",
       icon: "hiking",
       library: "MaterialCommunityIcons",
       category: "Sports d'endurance",
     },
     {
-      name: "Triathlon",
+      name: "triathlon",
       icon: "timer",
       library: "MaterialIcons",
       category: "Sports d'endurance",
@@ -109,25 +109,25 @@ export const SportInput: React.FC<SportInputProps> = ({
 
     // Sports de combat
     {
-      name: "Boxe",
+      name: "boxing",
       icon: "boxing-glove",
       library: "MaterialCommunityIcons",
       category: "Sports de combat",
     },
     {
-      name: "Judo",
+      name: "judo",
       icon: "karate",
       library: "MaterialCommunityIcons",
       category: "Sports de combat",
     },
     {
-      name: "Karaté",
+      name: "karate",
       icon: "karate",
       library: "MaterialCommunityIcons",
       category: "Sports de combat",
     },
     {
-      name: "MMA",
+      name: "mma",
       icon: "karate",
       library: "MaterialCommunityIcons",
       category: "Sports de combat",
@@ -135,25 +135,25 @@ export const SportInput: React.FC<SportInputProps> = ({
 
     // Fitness & Musculation
     {
-      name: "Musculation",
+      name: "weightlifting",
       icon: "dumbbell",
       library: "MaterialCommunityIcons",
       category: "Fitness",
     },
     {
-      name: "CrossFit",
+      name: "crossfit",
       icon: "weight-lifter",
       library: "MaterialCommunityIcons",
       category: "Fitness",
     },
     {
-      name: "Pilates",
+      name: "pilates",
       icon: "yoga",
       library: "MaterialCommunityIcons",
       category: "Fitness",
     },
     {
-      name: "Yoga",
+      name: "yoga",
       icon: "yoga",
       library: "MaterialCommunityIcons",
       category: "Fitness",
@@ -161,25 +161,25 @@ export const SportInput: React.FC<SportInputProps> = ({
 
     // Sports de glisse
     {
-      name: "Ski",
+      name: "skiing",
       icon: "ski",
       library: "MaterialCommunityIcons",
       category: "Sports de glisse",
     },
     {
-      name: "Snowboard",
+      name: "snowboard",
       icon: "snowboard",
       library: "MaterialCommunityIcons",
       category: "Sports de glisse",
     },
     {
-      name: "Surf",
+      name: "surfing",
       icon: "surfing",
       library: "MaterialCommunityIcons",
       category: "Sports de glisse",
     },
     {
-      name: "Skateboard",
+      name: "skateboard",
       icon: "skateboard",
       library: "MaterialCommunityIcons",
       category: "Sports de glisse",
@@ -187,25 +187,25 @@ export const SportInput: React.FC<SportInputProps> = ({
 
     // Autres
     {
-      name: "Escalade",
+      name: "climbing",
       icon: "trending-up",
       library: "MaterialIcons",
       category: "Autres",
     },
     {
-      name: "Danse",
+      name: "dance",
       icon: "human-female-dance",
       library: "MaterialCommunityIcons",
       category: "Autres",
     },
     {
-      name: "Golf",
+      name: "golf",
       icon: "sports-golf",
       library: "MaterialIcons",
       category: "Autres",
     },
     {
-      name: "Escrime",
+      name: "fencing",
       icon: "sports-martial-arts",
       library: "MaterialIcons",
       category: "Autres",
@@ -259,6 +259,14 @@ export const SportInput: React.FC<SportInputProps> = ({
 
   // Combiner les sports par défaut avec les sports personnalisés
   const allSports = [...sports, ...customSports];
+
+  // Fonction pour traduire le nom du sport
+  const getTranslatedSportName = (sportName: string): string => {
+    // Convertir le nom en clé de traduction (ex: "football" -> "football")
+    const sportKey = sportName.toLowerCase() as keyof typeof t;
+    const translation = t(sportKey);
+    return translation || sportName;
+  };
 
   // Fonction pour rendre l'icône appropriée selon la bibliothèque
   const renderIcon = (sport: Sport, size: number, color: string) => {
@@ -442,7 +450,7 @@ export const SportInput: React.FC<SportInputProps> = ({
               fontSize={13}
               fontWeight="600"
             >
-              {sport.name}
+              {getTranslatedSportName(sport.name)}
             </Text>
 
             {/* Bouton de suppression pour les sports ajoutés via "Autre" */}
