@@ -1,31 +1,45 @@
-import React from "react";
-import { ScrollView, Alert } from "react-native";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  Alert,
+  Modal,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { Text, View, XStack, YStack, H2, Switch, ListItem } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import { Ionicons } from "@expo/vector-icons";
 import { BackHeader } from "../../components/common/BackHeader";
+import LanguageSelector from "../../components/common/LanguageSelector";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Settings() {
   const { colors, colorScheme, toggleTheme } = useTheme();
   const { logout } = useAuth();
+  const { t, locale } = useLocalization();
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert("Déconnexion", "Êtes-vous sûr de vouloir vous déconnecter ?", [
-      { text: "Annuler", style: "cancel" },
+    Alert.alert(t("logout"), t("logout"), [
+      { text: t("cancel"), style: "cancel" },
       {
-        text: "Se déconnecter",
+        text: t("logout"),
         style: "destructive",
         onPress: logout,
       },
     ]);
   };
 
+  const getLanguageName = (code: string) => {
+    return code === "fr" ? "Français" : "English";
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <BackHeader title="Paramètres" />
+      <BackHeader title={t("settings")} />
 
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -35,7 +49,7 @@ export default function Settings() {
           {/* Section Apparence */}
           <YStack space="$3">
             <H2 color={colors.foreground} fontSize="$4" fontWeight="600">
-              Apparence
+              {t("theme")}
             </H2>
 
             <View
@@ -63,16 +77,14 @@ export default function Settings() {
                       fontSize="$4"
                       fontWeight="500"
                     >
-                      Mode sombre
+                      {t("darkMode")}
                     </Text>
                     <Text
                       color={colors.mutedForeground}
                       fontSize="$2"
                       marginTop="$1"
                     >
-                      {colorScheme === "dark"
-                        ? "Thème sombre activé"
-                        : "Thème clair activé"}
+                      {colorScheme === "dark" ? t("darkMode") : t("lightMode")}
                     </Text>
                   </YStack>
                   <Switch
@@ -94,10 +106,73 @@ export default function Settings() {
             </View>
           </YStack>
 
+          {/* Section Langue */}
+          <YStack space="$3">
+            <H2 color={colors.foreground} fontSize="$4" fontWeight="600">
+              {t("language")}
+            </H2>
+
+            <View
+              backgroundColor={colors.card}
+              borderRadius="$3"
+              borderColor={colors.border}
+              borderWidth={1}
+              overflow="hidden"
+            >
+              <ListItem
+                backgroundColor="transparent"
+                paddingVertical="$4"
+                paddingHorizontal="$4"
+                onPress={() => setShowLanguageSelector(true)}
+              >
+                <XStack
+                  flex={1}
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <XStack space="$3" alignItems="center">
+                    <View
+                      backgroundColor={colors.accent}
+                      borderRadius="$2"
+                      padding="$2"
+                    >
+                      <Ionicons
+                        name="language"
+                        size={20}
+                        color={colors.foreground}
+                      />
+                    </View>
+                    <YStack>
+                      <Text
+                        color={colors.foreground}
+                        fontSize="$4"
+                        fontWeight="500"
+                      >
+                        {t("language")}
+                      </Text>
+                      <Text
+                        color={colors.mutedForeground}
+                        fontSize="$2"
+                        marginTop="$1"
+                      >
+                        {getLanguageName(locale)}
+                      </Text>
+                    </YStack>
+                  </XStack>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={20}
+                    color={colors.mutedForeground}
+                  />
+                </XStack>
+              </ListItem>
+            </View>
+          </YStack>
+
           {/* Section Compte */}
           <YStack space="$3">
             <H2 color={colors.foreground} fontSize="$4" fontWeight="600">
-              Compte
+              {t("account")}
             </H2>
 
             <View
@@ -138,14 +213,14 @@ export default function Settings() {
                         fontSize="$4"
                         fontWeight="500"
                       >
-                        Modifier le profil
+                        {t("editProfile")}
                       </Text>
                       <Text
                         color={colors.mutedForeground}
                         fontSize="$2"
                         marginTop="$1"
                       >
-                        Changer vos informations personnelles
+                        {t("editProfile")}
                       </Text>
                     </YStack>
                   </XStack>
@@ -186,14 +261,14 @@ export default function Settings() {
                         fontSize="$4"
                         fontWeight="500"
                       >
-                        Se déconnecter
+                        {t("logout")}
                       </Text>
                       <Text
                         color={colors.mutedForeground}
                         fontSize="$2"
                         marginTop="$1"
                       >
-                        Fermer votre session
+                        {t("logout")}
                       </Text>
                     </YStack>
                   </XStack>
@@ -360,7 +435,7 @@ export default function Settings() {
                   <Ionicons
                     name="chevron-forward"
                     size={20}
-                    color={colors.foreground}
+                    color={colors.mutedForeground}
                   />
                 </XStack>
               </ListItem>
@@ -434,6 +509,42 @@ export default function Settings() {
           <View height={50} />
         </YStack>
       </ScrollView>
+
+      {/* Modal de sélection de langue */}
+      <Modal
+        visible={showLanguageSelector}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowLanguageSelector(false)}
+        statusBarTranslucent={true}
+        hardwareAccelerated={true}
+      >
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+            paddingTop: 0,
+            paddingBottom: 0,
+          }}
+          activeOpacity={1}
+          onPress={() => setShowLanguageSelector(false)}
+        >
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="transparent"
+            translucent={true}
+          />
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={(e: any) => e.stopPropagation()}
+          >
+            <LanguageSelector onClose={() => setShowLanguageSelector(false)} />
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }

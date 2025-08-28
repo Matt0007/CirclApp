@@ -14,6 +14,7 @@ import { YStack, Text } from "tamagui";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import ButtonGradient from "../common/ButtonGradient";
 import { API_BASE_URL } from "../../config/api";
 
@@ -214,6 +215,7 @@ export const SportInput: React.FC<SportInputProps> = ({
   description = "Sélectionnez tous les sports que vous pratiquez",
 }) => {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const [showModal, setShowModal] = useState(false);
   const [selectedSport, setSelectedSport] = useState<SportDB | null>(null);
   const [customSports, setCustomSports] = useState<Sport[]>([]);
@@ -361,12 +363,12 @@ export const SportInput: React.FC<SportInputProps> = ({
 
   const handleRemoveCustomSport = (sportName: string) => {
     Alert.alert(
-      "Supprimer le sport",
-      `Voulez-vous vraiment supprimer "${sportName}" ?`,
+      t("removeSport"),
+      `${t("removeSportConfirm")} "${sportName}" ?`,
       [
-        { text: "Annuler", style: "cancel" },
+        { text: t("cancel"), style: "cancel" },
         {
-          text: "Supprimer",
+          text: t("delete"),
           style: "destructive",
           onPress: () => {
             setCustomSports((prev) =>
@@ -385,11 +387,11 @@ export const SportInput: React.FC<SportInputProps> = ({
   return (
     <YStack space="$3">
       <Text fontSize={18} fontWeight="600" color={colors.foreground}>
-        {label}
+        {t("practicedSports")}
       </Text>
 
       <Text fontSize={14} color={colors.mutedForeground} marginBottom="$2">
-        {description}
+        {t("selectSportsDescription")}
       </Text>
 
       {/* Tous les sports sur une seule ligne */}
@@ -503,7 +505,7 @@ export const SportInput: React.FC<SportInputProps> = ({
             color={colors.primary}
           />
           <Text color={colors.primary} fontSize={13} fontWeight="600">
-            Autre
+            {t("other")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -559,7 +561,7 @@ export const SportInput: React.FC<SportInputProps> = ({
               color={colors.foreground}
               marginBottom={20}
             >
-              Ajouter un sport de la base
+              {t("addSportFromDB")}
             </Text>
 
             {/* Select avec recherche intégrée */}
@@ -592,9 +594,7 @@ export const SportInput: React.FC<SportInputProps> = ({
                   flex={1}
                   textAlign="left"
                 >
-                  {selectedSport
-                    ? selectedSport.name
-                    : "Sélectionnez un sport..."}
+                  {selectedSport ? selectedSport.name : t("selectSport")}
                 </Text>
                 <MaterialCommunityIcons
                   name={showDropdown ? "chevron-up" : "chevron-down"}
@@ -674,7 +674,7 @@ export const SportInput: React.FC<SportInputProps> = ({
                             searchSports(text);
                           }, 400);
                         }}
-                        placeholder="Rechercher un sport..."
+                        placeholder={t("searchSport")}
                         placeholderTextColor={colors.mutedForeground}
                         style={{
                           flex: 1,
@@ -698,7 +698,7 @@ export const SportInput: React.FC<SportInputProps> = ({
                           }}
                         >
                           <Text fontSize={14} color={colors.mutedForeground}>
-                            Recherche en cours...
+                            {t("searchInProgress")}
                           </Text>
                         </View>
                       ) : getFilteredSports().length > 0 ? (
@@ -734,7 +734,7 @@ export const SportInput: React.FC<SportInputProps> = ({
                           }}
                         >
                           <Text fontSize={14} color={colors.mutedForeground}>
-                            Aucun sport trouvé avec ce nom
+                            {t("noSportFound")}
                           </Text>
                         </View>
                       ) : (
@@ -745,7 +745,7 @@ export const SportInput: React.FC<SportInputProps> = ({
                           }}
                         >
                           <Text fontSize={14} color={colors.mutedForeground}>
-                            Tapez au moins 3 caractères pour rechercher
+                            {t("type3Characters")}
                           </Text>
                         </View>
                       )}
@@ -801,7 +801,7 @@ export const SportInput: React.FC<SportInputProps> = ({
                     adjustsFontSizeToFit={true}
                     minimumFontScale={0.9}
                   >
-                    Annuler
+                    {t("cancel")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -809,7 +809,7 @@ export const SportInput: React.FC<SportInputProps> = ({
               <View style={{ flex: 1, minWidth: 120 }}>
                 {/* Largeur minimale pour éviter la coupure */}
                 <ButtonGradient
-                  title="Ajouter"
+                  title={t("add")}
                   onPress={handleAddSelectedSport}
                   size="medium"
                   disabled={!selectedSport}

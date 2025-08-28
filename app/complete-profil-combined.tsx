@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
 import { YStack, Text, XStack } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, Dimensions, View} from "react-native";
+import { ScrollView, Dimensions, View } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 import { useRouter } from "expo-router";
 import {
   BasicProfileInput,
@@ -16,6 +17,7 @@ const { width: screenWidth } = Dimensions.get("window");
 
 export default function CompleteProfilCombined() {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const router = useRouter();
   const scrollViewRef = useRef<ScrollView>(null);
   const { isSubmitting, completeProfile } = useCompleteProfile();
@@ -127,7 +129,7 @@ export default function CompleteProfilCombined() {
             color={colors.primary}
             textAlign="center"
           >
-            Completez votre profil
+            {t("completeYourProfile")}
           </Text>
         </YStack>
       </YStack>
@@ -201,7 +203,7 @@ export default function CompleteProfilCombined() {
       >
         {currentStep === 1 ? (
           <ButtonGradient
-            title="Continuer"
+            title={t("continue")}
             onPress={goToNextStep}
             disabled={!isStep1Valid}
             size="large"
@@ -210,7 +212,7 @@ export default function CompleteProfilCombined() {
           <XStack space="$4" width="100%">
             <View style={{ flex: 1, minWidth: 120 }}>
               <ButtonGradient
-                title="Retour"
+                title={t("back")}
                 onPress={goToPreviousStep}
                 variant="secondary"
                 size="large"
@@ -218,7 +220,7 @@ export default function CompleteProfilCombined() {
             </View>
             <View style={{ flex: 1.5, minWidth: 160 }}>
               <ButtonGradient
-                title="Finaliser le profil"
+                title={t("finalizeProfile")}
                 onPress={handleFinish}
                 disabled={!isStep2Valid}
                 isLoading={isSubmitting}

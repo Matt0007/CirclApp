@@ -3,12 +3,14 @@ import { View, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { YStack, Text } from "tamagui";
 import { useTheme } from "../contexts/ThemeContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 import { useRouter } from "expo-router";
 import ButtonGradient from "../components/common/ButtonGradient";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function ProfileCompleted() {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const router = useRouter();
 
   // Animations
@@ -132,7 +134,7 @@ export default function ProfileCompleted() {
             textAlign="center"
             marginBottom="$4"
           >
-            🎉 Félicitations !
+            {t("congratulations")}
           </Text>
 
           <Text
@@ -142,7 +144,7 @@ export default function ProfileCompleted() {
             textAlign="center"
             marginBottom="$3"
           >
-            Votre profil est maintenant complet
+            {t("profileNowComplete")}
           </Text>
 
           <Text
@@ -151,8 +153,7 @@ export default function ProfileCompleted() {
             textAlign="center"
             lineHeight={24}
           >
-            Vous êtes prêt à découvrir Circle et à{"\n"}
-            vous connecter avec d&apos;autres passionnés de sport
+            {t("readyToDiscover")}
           </Text>
         </Animated.View>
 
@@ -166,7 +167,7 @@ export default function ProfileCompleted() {
           }}
         >
           <ButtonGradient
-            title="🚀 Découvrir Circl"
+            title={t("discoverCircl")}
             onPress={handleAccessApp}
             size="large"
           />
@@ -178,7 +179,7 @@ export default function ProfileCompleted() {
             marginTop="$3"
             fontStyle="italic"
           >
-            Rencontrez, partagez, évoluez
+            {t("meetShareEvolve")}
           </Text>
         </Animated.View>
       </YStack>

@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import ButtonGradient from "../common/ButtonGradient";
 
 interface BasicProfileInputProps {
@@ -26,6 +27,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   onBirthDateChange,
 }) => {
   const { colors, colorScheme } = useTheme();
+  const { t, locale } = useLocalization();
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date>(
     birthDate || new Date()
@@ -95,7 +97,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
       {/* Photo de profil */}
       <YStack space="$3" alignItems="center">
         <Text fontSize={18} fontWeight="600" color={colors.foreground}>
-          Photo de profil
+          {t("profilePhoto")}
         </Text>
 
         <TouchableOpacity onPress={pickImage}>
@@ -179,7 +181,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
       {/* Sexe */}
       <YStack space="$3">
         <Text fontSize={18} fontWeight="600" color={colors.foreground}>
-          Sexe
+          {t("gender")}
         </Text>
 
         <View
@@ -214,7 +216,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
               color={gender === "Homme" ? colors.primary : colors.foreground}
               marginTop={8}
             >
-              Homme
+              {t("man")}
             </Text>
           </TouchableOpacity>
 
@@ -244,7 +246,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
               color={gender === "Femme" ? colors.primary : colors.foreground}
               marginTop={8}
             >
-              Femme
+              {t("woman")}
             </Text>
           </TouchableOpacity>
 
@@ -274,7 +276,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
               color={gender === "Autre" ? colors.primary : colors.foreground}
               marginTop={8}
             >
-              Autre
+              {t("other")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -283,7 +285,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
       {/* Date de naissance */}
       <YStack space="$3">
         <Text fontSize={18} fontWeight="600" color={colors.foreground}>
-          Date de naissance
+          {t("birthDate")}
         </Text>
 
         <TouchableOpacity
@@ -308,7 +310,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
               color={birthDate ? colors.foreground : colors.mutedForeground}
               fontSize={16}
             >
-              {birthDate ? formatDate(birthDate) : "Sélectionner une date"}
+              {birthDate ? formatDate(birthDate) : t("selectDate")}
             </Text>
             <Ionicons name="calendar" size={20} color={colors.primary} />
           </View>
@@ -348,7 +350,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                   color={colors.foreground}
                   marginBottom={20}
                 >
-                  Sélectionner votre date de naissance
+                  {t("selectBirthDate")}
                 </Text>
 
                 <DateTimePicker
@@ -371,7 +373,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                 >
                   <View style={{ flex: 1, minWidth: 100 }}>
                     <ButtonGradient
-                      title="Annuler"
+                      title={t("cancel")}
                       onPress={cancelDate}
                       variant="secondary"
                       size="medium"
@@ -380,7 +382,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
 
                   <View style={{ flex: 1, minWidth: 100 }}>
                     <ButtonGradient
-                      title="Confirmer"
+                      title={t("confirm")}
                       onPress={confirmDate}
                       size="medium"
                     />

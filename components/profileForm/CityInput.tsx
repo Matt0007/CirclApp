@@ -9,6 +9,7 @@ import {
 import { YStack, Text } from "tamagui";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface CityInputProps {
   value: string;
@@ -28,6 +29,7 @@ export const CityInput: React.FC<CityInputProps> = ({
   label = "Ville",
 }) => {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
   const [isLoadingCities, setIsLoadingCities] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -186,7 +188,7 @@ export const CityInput: React.FC<CityInputProps> = ({
   return (
     <YStack space="$3">
       <Text fontSize={18} fontWeight="600" color={colors.foreground}>
-        {label}
+        {t("city")}
       </Text>
 
       {/* Select avec recherche intégrée */}
@@ -304,7 +306,7 @@ export const CityInput: React.FC<CityInputProps> = ({
               <TextInput
                 value={searchQuery}
                 onChangeText={handleCityChange}
-                placeholder="Rechercher une ville..."
+                placeholder={t("searchCity")}
                 placeholderTextColor={colors.mutedForeground}
                 style={{
                   flex: 1,
@@ -330,7 +332,7 @@ export const CityInput: React.FC<CityInputProps> = ({
                     }}
                   >
                     <Text fontSize={14} color={colors.mutedForeground}>
-                      🔍 Recherche en cours...
+                      {t("searchInProgress")}
                     </Text>
                   </View>
                 ) : citySuggestions.length > 0 ? (
@@ -370,7 +372,7 @@ export const CityInput: React.FC<CityInputProps> = ({
                     }}
                   >
                     <Text fontSize={14} color={colors.mutedForeground}>
-                      Aucune ville trouvée avec ce nom
+                      {t("noCityFound")}
                     </Text>
                   </View>
                 ) : (
@@ -381,7 +383,7 @@ export const CityInput: React.FC<CityInputProps> = ({
                     }}
                   >
                     <Text fontSize={14} color={colors.mutedForeground}>
-                      Tapez au moins 3 caractères pour rechercher
+                      {t("type3CharactersCity")}
                     </Text>
                   </View>
                 )}

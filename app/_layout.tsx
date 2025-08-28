@@ -4,6 +4,7 @@ import { defaultConfig } from "@tamagui/config/v4";
 import { ThemeProvider } from "../contexts/ThemeContext";
 import { AuthProvider } from "../contexts/AuthContext";
 import { WebSocketProvider } from "../contexts/WebSocketContext";
+import { LocalizationProvider } from "../contexts/LocalizationContext";
 
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
@@ -31,17 +32,19 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <WebSocketProvider>
-          <TamaguiProvider config={config}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(auth)/auth" />
-            </Stack>
-          </TamaguiProvider>
-        </WebSocketProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <LocalizationProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <WebSocketProvider>
+            <TamaguiProvider config={config}>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="(auth)/auth" />
+              </Stack>
+            </TamaguiProvider>
+          </WebSocketProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
