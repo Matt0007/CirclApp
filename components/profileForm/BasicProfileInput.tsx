@@ -27,7 +27,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   onBirthDateChange,
 }) => {
   const { colors, colorScheme } = useTheme();
-  const { t } = useLocalization();
+  const { t, locale } = useLocalization();
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date>(
     birthDate || new Date()
@@ -85,7 +85,8 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("fr-FR", {
+    const dateLocale = locale === "fr" ? "fr-FR" : "en-US";
+    return date.toLocaleDateString(dateLocale, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -361,6 +362,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                   maximumDate={new Date()}
                   minimumDate={new Date(1900, 0, 1)}
                   themeVariant={colorScheme === "light" ? "light" : "dark"}
+                  locale={locale === "fr" ? "fr-FR" : "en-US"}
                 />
 
                 <View
@@ -402,6 +404,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
             onChange={handleDateChange}
             maximumDate={new Date()}
             minimumDate={new Date(1900, 0, 1)}
+            locale={locale === "fr" ? "fr-FR" : "en-US"}
           />
         )}
       </YStack>
