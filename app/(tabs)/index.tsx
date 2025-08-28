@@ -1,4 +1,4 @@
-import { ActivityIndicator, View } from "react-native";
+import { View } from "react-native";
 import { Button, Text } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { router } from "expo-router";
@@ -65,6 +65,9 @@ export default function Index() {
           >
             Test Page Combinée
           </Text>
+        </Button>
+        <Button onPress={() => router.push("/profile-completed")}>
+          <Text>Completez votre profil (ancien)</Text>
         </Button>
 
       </View>

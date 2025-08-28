@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { YStack, Text, XStack } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, Dimensions, View, ActivityIndicator } from "react-native";
+import { ScrollView, Dimensions, View} from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { useRouter } from "expo-router";
 import {
@@ -74,8 +74,8 @@ export default function CompleteProfilCombined() {
     const success = await completeProfile(profileData);
 
     if (success) {
-      // Rediriger vers la page principale
-      router.replace("/(tabs)");
+      // Rediriger vers la page de félicitations
+      router.replace("/profile-completed");
     }
   };
 
