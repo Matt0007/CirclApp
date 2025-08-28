@@ -25,7 +25,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   birthDate,
   onBirthDateChange,
 }) => {
-  const { colors } = useTheme();
+  const { colors, colorScheme } = useTheme();
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date>(
     birthDate || new Date()
@@ -358,6 +358,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                   onChange={handleDateChange}
                   maximumDate={new Date()}
                   minimumDate={new Date(1900, 0, 1)}
+                  themeVariant={colorScheme === "light" ? "light" : "dark"}
                 />
 
                 <View
