@@ -262,23 +262,38 @@ export const CityInput: React.FC<CityInputProps> = ({
             }}
           >
             {/* Barre de recherche intégrée */}
-            <TextInput
-              value={searchQuery}
-              onChangeText={handleCityChange}
-              placeholder="Rechercher une ville..."
-              placeholderTextColor={colors.mutedForeground}
+            <View
               style={{
-                padding: 12,
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 12,
+                paddingVertical: 12,
                 borderBottomWidth: 1,
                 borderBottomColor: colors.border,
-                fontSize: 16,
-                color: colors.foreground,
                 backgroundColor: colors.card,
                 borderTopLeftRadius: 12,
                 borderTopRightRadius: 12,
               }}
-              autoFocus={true}
-            />
+            >
+              <MaterialCommunityIcons
+                name="magnify"
+                size={20}
+                color={colors.mutedForeground}
+                style={{ marginRight: 8 }}
+              />
+              <TextInput
+                value={searchQuery}
+                onChangeText={handleCityChange}
+                placeholder="Rechercher une ville..."
+                placeholderTextColor={colors.mutedForeground}
+                style={{
+                  flex: 1,
+                  fontSize: 16,
+                  color: colors.foreground,
+                }}
+                autoFocus={true}
+              />
+            </View>
 
             {/* Liste des villes */}
             <ScrollView

@@ -317,6 +317,53 @@ export default function Settings() {
                   />
                 </XStack>
               </ListItem>
+              <ListItem
+                backgroundColor="transparent"
+                paddingVertical="$4"
+                paddingHorizontal="$4"
+                onPress={() => router.push("/test")}
+              >
+                <XStack
+                  flex={1}
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <XStack space="$3" alignItems="center">
+                    <View
+                      backgroundColor={colors.accent}
+                      borderRadius="$2"
+                      padding="$2"
+                    >
+                      <Ionicons
+                        name="document-text"
+                        size={20}
+                        color={colors.foreground}
+                      />
+                    </View>
+                    <YStack>
+                      <Text
+                        color={colors.foreground}
+                        fontSize="$4"
+                        fontWeight="500"
+                      >
+                        Test
+                      </Text>
+                      <Text
+                        color={colors.mutedForeground}
+                        fontSize="$2"
+                        marginTop="$1"
+                      >
+                        Test
+                      </Text>
+                    </YStack>
+                  </XStack>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={20}
+                    color={colors.foreground}
+                  />
+                </XStack>
+              </ListItem>
             </View>
           </YStack>
 

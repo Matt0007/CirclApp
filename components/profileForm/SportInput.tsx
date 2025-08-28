@@ -483,7 +483,10 @@ export const SportInput: React.FC<SportInputProps> = ({
             backgroundColor: "rgba(0, 0, 0, 0.5)",
           }}
           activeOpacity={1}
-          onPress={() => setShowModal(false)}
+          onPress={() => {
+            setShowModal(false);
+            setShowDropdown(false); // Fermer aussi le select
+          }}
         >
           <Animated.View
             style={{
@@ -555,14 +558,15 @@ export const SportInput: React.FC<SportInputProps> = ({
               {/* Dropdown avec recherche intégrée */}
               {showDropdown && (
                 <>
-                  {/* Overlay invisible pour fermer le dropdown */}
+                  {/* Overlay invisible pour fermer le dropdown - couvre seulement la zone du select */}
                   <TouchableOpacity
                     style={{
                       position: "absolute",
-                      top: -1000,
-                      left: -1000,
-                      width: 2000,
-                      height: 2000,
+                      top: -20,
+                      left: -20,
+                      right: -20,
+                      bottom: -20,
+                      backgroundColor: "transparent",
                       zIndex: 999,
                     }}
                     activeOpacity={0}
@@ -589,22 +593,37 @@ export const SportInput: React.FC<SportInputProps> = ({
                     }}
                   >
                     {/* Barre de recherche intégrée */}
-                    <TextInput
-                      value={searchQuery}
-                      onChangeText={setSearchQuery}
-                      placeholder="Rechercher un sport..."
-                      placeholderTextColor={colors.mutedForeground}
+                    <View
                       style={{
-                        padding: 12,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingHorizontal: 12,
+                        paddingVertical: 12,
                         borderBottomWidth: 1,
                         borderBottomColor: colors.border,
-                        fontSize: 16,
-                        color: colors.foreground,
                         borderTopLeftRadius: 12,
                         borderTopRightRadius: 12,
                       }}
-                      autoFocus={true}
-                    />
+                    >
+                      <MaterialCommunityIcons
+                        name="magnify"
+                        size={20}
+                        color={colors.mutedForeground}
+                        style={{ marginRight: 8 }}
+                      />
+                      <TextInput
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                        placeholder="Rechercher un sport..."
+                        placeholderTextColor={colors.mutedForeground}
+                        style={{
+                          flex: 1,
+                          fontSize: 16,
+                          color: colors.foreground,
+                        }}
+                        autoFocus={true}
+                      />
+                    </View>
 
                     <ScrollView
                       showsVerticalScrollIndicator={false}
