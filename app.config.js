@@ -12,7 +12,16 @@ export default {
     resizeMode: "contain",
     backgroundColor: "#D97706"
   },
+  updates: {
+    url: "https://u.expo.dev/48bed89c-0471-40fc-aebd-7db3bd151a96"
+  },
+  runtimeVersion: {
+    policy: "appVersion"
+  },
   extra: {
-    apiUrl: process.env.API_URL || "http://192.168.1.172:3000"
+    apiUrl: process.env.API_URL || "https://circlapi-production.up.railway.app",
+    eas: {
+      projectId: "48bed89c-0471-40fc-aebd-7db3bd151a96"
+    }
   }
 };
