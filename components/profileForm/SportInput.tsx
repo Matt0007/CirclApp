@@ -4,7 +4,6 @@ import {
   View,
   Modal,
   TextInput,
-  Alert,
   ScrollView,
   Keyboard,
   Animated,
@@ -16,6 +15,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLocalization } from "../../contexts/LocalizationContext";
 import ButtonGradient from "../common/ButtonGradient";
+import ConfirmationModal from "../common/ConfirmationModal";
 import { API_BASE_URL } from "../../config/api";
 
 // Interface pour les sports de l'API
@@ -217,6 +217,8 @@ export const SportInput: React.FC<SportInputProps> = ({
   const { colors } = useTheme();
   const { t } = useLocalization();
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [sportToDelete, setSportToDelete] = useState<string>("");
   const [selectedSport, setSelectedSport] = useState<SportDB | null>(null);
   const [customSports, setCustomSports] = useState<Sport[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -337,7 +339,6 @@ export const SportInput: React.FC<SportInputProps> = ({
   // Fonction pour ajouter le sport sélectionné
   const handleAddSelectedSport = () => {
     if (!selectedSport) {
-      Alert.alert("Erreur", "Veuillez sélectionner un sport");
       return;
     }
 
@@ -347,7 +348,6 @@ export const SportInput: React.FC<SportInputProps> = ({
     );
 
     if (sportExists) {
-      Alert.alert("Erreur", "Ce sport existe déjà dans la liste");
       return;
     }
 
@@ -370,26 +370,21 @@ export const SportInput: React.FC<SportInputProps> = ({
   };
 
   const handleRemoveCustomSport = (sportName: string) => {
-    Alert.alert(
-      t("removeSport"),
-      `${t("removeSportConfirm")} "${sportName}" ?`,
-      [
-        { text: t("cancel"), style: "cancel" },
-        {
-          text: t("delete"),
-          style: "destructive",
-          onPress: () => {
-            setCustomSports((prev) =>
-              prev.filter((sport) => sport.name !== sportName)
-            );
-            // Désélectionner le sport s'il était sélectionné
-            if (selectedSports.includes(sportName)) {
-              onSportToggle(sportName);
-            }
-          },
-        },
-      ]
-    );
+    setSportToDelete(sportName);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteSport = () => {
+    if (sportToDelete) {
+      setCustomSports((prev) =>
+        prev.filter((sport) => sport.name !== sportToDelete)
+      );
+      // Désélectionner le sport s'il était sélectionné
+      if (selectedSports.includes(sportToDelete)) {
+        onSportToggle(sportToDelete);
+      }
+      setSportToDelete("");
+    }
   };
 
   return (
@@ -522,7 +517,7 @@ export const SportInput: React.FC<SportInputProps> = ({
       <Modal
         visible={showModal}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowModal(false)}
       >
         <TouchableOpacity
@@ -530,7 +525,8 @@ export const SportInput: React.FC<SportInputProps> = ({
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            padding: 20,
           }}
           activeOpacity={1}
           onPress={() => {
@@ -549,11 +545,17 @@ export const SportInput: React.FC<SportInputProps> = ({
           <Animated.View
             style={{
               backgroundColor: colors.background,
-              borderRadius: 16,
-              padding: 20,
-              width: "90%",
+              borderRadius: 20,
+              padding: 24,
+              width: "100%",
+              maxWidth: 500,
               maxHeight: Platform.OS === "ios" ? "70%" : "80%",
               alignItems: "center",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 0.25,
+              shadowRadius: 20,
+              elevation: 10,
               transform: [
                 {
                   translateY: translateYAnim,
@@ -773,7 +775,7 @@ export const SportInput: React.FC<SportInputProps> = ({
             >
               <View style={{ flex: 1, minWidth: 120 }}>
                 {/* Largeur minimale pour éviter la coupure */}
-                <TouchableOpacity
+                <ButtonGradient
                   onPress={() => {
                     setSelectedSport(null);
                     setSearchQuery("");
@@ -785,33 +787,10 @@ export const SportInput: React.FC<SportInputProps> = ({
                       clearTimeout(searchTimeoutRef.current);
                     }
                   }}
-                  style={{
-                    paddingVertical: 12,
-                    paddingHorizontal: 20,
-                    borderRadius: 12,
-                    backgroundColor: colors.card,
-                    borderWidth: 1,
-                    borderColor: colors.border,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: 48, // Hauteur minimale
-                  }}
-                  activeOpacity={0.8}
-                >
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      color: colors.foreground,
-                      textAlign: "center",
-                    }}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit={true}
-                    minimumFontScale={0.9}
-                  >
-                    {t("cancel")}
-                  </Text>
-                </TouchableOpacity>
+                  title={t("cancel")}
+                  variant="secondary"
+                  size="medium"
+                />
               </View>
 
               <View style={{ flex: 1, minWidth: 120 }}>
@@ -827,6 +806,18 @@ export const SportInput: React.FC<SportInputProps> = ({
           </Animated.View>
         </TouchableOpacity>
       </Modal>
+
+      {/* Modal de confirmation de suppression */}
+      <ConfirmationModal
+        visible={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteSport}
+        title={t("removeSport")}
+        message={`${t("removeSportConfirm")} "${sportToDelete}" ?`}
+        confirmText={t("delete")}
+        cancelText={t("cancel")}
+        confirmVariant="destructive"
+      />
     </YStack>
   );
 };

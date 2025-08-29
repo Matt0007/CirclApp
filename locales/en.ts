@@ -109,5 +109,6 @@ export default {
   darkMode: "Dark Mode",
   lightMode: "Light Mode",
   logout: "Logout",
+  logoutConfirm: "Do you really want to logout?",
   account: "Account",
 };

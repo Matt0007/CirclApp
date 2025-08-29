@@ -111,5 +111,6 @@ export default {
   darkMode: "Mode sombre",
   lightMode: "Mode clair",
   logout: "Déconnexion",
+  logoutConfirm: "Voulez-vous vraiment vous déconnecter ?",
   account: "Compte",
 };

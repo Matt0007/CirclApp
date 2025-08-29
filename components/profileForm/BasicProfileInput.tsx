@@ -322,7 +322,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
           <Modal
             visible={showDatePicker}
             transparent={true}
-            animationType="slide"
+            animationType="fade"
             onRequestClose={() => {
               setShowDatePicker(false);
               setSelectedDate(birthDate || new Date());
@@ -333,16 +333,23 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backgroundColor: "rgba(0, 0, 0, 0.7)",
+                padding: 20,
               }}
             >
               <View
                 style={{
                   backgroundColor: colors.background,
-                  borderRadius: 16,
-                  padding: 20,
-                  width: "80%",
+                  borderRadius: 20,
+                  padding: 24,
+                  width: "100%",
+                  maxWidth: 400,
                   alignItems: "center",
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 10 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 20,
+                  elevation: 10,
                 }}
               >
                 <Text

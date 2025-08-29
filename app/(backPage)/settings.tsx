@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  ScrollView,
-  Alert,
-  Modal,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { ScrollView, Modal, TouchableOpacity, StatusBar } from "react-native";
 import { Text, View, XStack, YStack, H2, Switch, ListItem } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -13,6 +7,7 @@ import { useLocalization } from "../../contexts/LocalizationContext";
 import { Ionicons } from "@expo/vector-icons";
 import { BackHeader } from "../../components/common/BackHeader";
 import LanguageSelector from "../../components/common/LanguageSelector";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -21,16 +16,10 @@ export default function Settings() {
   const { logout } = useAuth();
   const { t, locale } = useLocalization();
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert(t("logout"), t("logout"), [
-      { text: t("cancel"), style: "cancel" },
-      {
-        text: t("logout"),
-        style: "destructive",
-        onPress: logout,
-      },
-    ]);
+    setShowLogoutModal(true);
   };
 
   const getLanguageName = (code: string) => {
@@ -545,6 +534,18 @@ export default function Settings() {
           </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
+
+      {/* Modal de confirmation de déconnexion */}
+      <ConfirmationModal
+        visible={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={logout}
+        title={t("logout")}
+        message={t("logoutConfirm")}
+        confirmText={t("logout")}
+        cancelText={t("cancel")}
+        confirmVariant="destructive"
+      />
     </SafeAreaView>
   );
 }
