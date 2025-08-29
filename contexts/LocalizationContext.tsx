@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Localization from "expo-localization";
-import locales, { Locale, TranslationKeys } from "../locales";
+import { locales, Locale, TranslationKeys } from "../locales";
 
 interface LocalizationContextType {
   locale: Locale;
@@ -127,7 +127,6 @@ export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
 
   const t = (key: TranslationKeys): string => {
     const translation = locales[locale][key] || key;
-    console.log(`Translation for "${key}" in ${locale}: "${translation}"`);
     return translation;
   };
 

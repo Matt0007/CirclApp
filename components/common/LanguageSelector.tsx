@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import CountryFlag from "react-native-country-flag";
 import { useLocalization } from "../../contexts/LocalizationContext";
 import { Locale } from "../../locales";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -22,17 +23,12 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
   // Get the current mode from the context
   const { useDeviceLanguage } = useLocalization();
 
-  // Debug: Log every render
-  console.log("LanguageSelector rendered with locale:", locale);
-
   const languages = [
-    { code: "en" as Locale, name: "English", flag: "🇬🇧" },
-    { code: "fr" as Locale, name: "Français", flag: "🇫🇷" },
+    { code: "en" as Locale, name: "English", countryCode: "GB" },
+    { code: "fr" as Locale, name: "Français", countryCode: "FR" },
   ];
 
   const handleLanguageChange = (newLocale: Locale) => {
-    console.log("LanguageSelector: User selected", newLocale);
-    console.log("LanguageSelector: Current locale is", locale);
     changeLocale(newLocale);
     onClose?.();
   };
@@ -69,7 +65,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
           }}
         >
           <View style={styles.cardContent}>
-            <Text style={styles.flag}>📱</Text>
+            <View style={styles.phoneIcon}>
+              <Ionicons
+                name="phone-portrait"
+                size={32}
+                color={colors.primary}
+              />
+            </View>
             <View style={styles.cardText}>
               <Text style={[styles.cardTitle, { color: colors.foreground }]}>
                 {t("useDeviceLanguage")}
@@ -114,7 +116,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
               ]}
               onPress={() => handleLanguageChange(language.code)}
             >
-              <Text style={styles.flag}>{language.flag}</Text>
+              <CountryFlag isoCode={language.countryCode} size={24} />
               <Text style={[styles.languageName, { color: colors.foreground }]}>
                 {language.name}
               </Text>
@@ -216,8 +218,11 @@ const styles = StyleSheet.create({
     minHeight: 100,
     justifyContent: "center",
   },
-  flag: {
-    fontSize: 32,
+  flagContainer: {
+    marginBottom: 8,
+    alignItems: "center",
+  },
+  phoneIcon: {
     marginBottom: 8,
   },
   languageName: {

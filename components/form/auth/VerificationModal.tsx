@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { YStack, Text } from "tamagui";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import { AlertFormError } from "../../alert";
 import CodeInput from "./CodeInput";
 import { ButtonGradient } from "../../common";
@@ -33,6 +34,7 @@ export default function VerificationModal({
   onClearError,
 }: VerificationModalProps) {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const [verificationCode, setVerificationCode] = useState("");
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -115,7 +117,7 @@ export default function VerificationModal({
                     textAlign: "center",
                   }}
                 >
-                  Code de vérification
+                  {t("verificationCode")}
                 </Text>
 
                 <Text
@@ -126,9 +128,7 @@ export default function VerificationModal({
                     lineHeight: 22,
                   }}
                 >
-                  Nous avons envoyé un code de vérification à votre adresse
-                  email. La vérification se fera automatiquement une fois les 6
-                  chiffres saisis.
+                  {t("verificationDescription")}
                 </Text>
 
                 <CodeInput
@@ -152,24 +152,24 @@ export default function VerificationModal({
                 <YStack space="$4" width="100%">
                   <ButtonGradient
                     onPress={handleResend}
-                    title="Renvoyer le code"
+                    title={t("resendCode")}
                     isLoading={isLoading}
                     disabled={isLoading || countdown > 0}
                     size="large"
                     loadingText={
                       countdown > 0
-                        ? `Renvoyer dans ${Math.floor(countdown / 60)}:${(
-                            countdown % 60
-                          )
+                        ? `${t("resendCode")} ${t(
+                            "verificationIn"
+                          )} ${Math.floor(countdown / 60)}:${(countdown % 60)
                             .toString()
                             .padStart(2, "0")}`
-                        : "Renvoyer le code"
+                        : t("resendCode")
                     }
                   />
 
                   <ButtonGradient
                     onPress={handleClose}
-                    title="Annuler"
+                    title={t("cancel")}
                     disabled={isLoading}
                     variant="secondary"
                     size="large"

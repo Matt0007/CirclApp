@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import { LoginForm, RegisterForm } from "../../components/form/auth";
 import GoogleLogo from "@/components/logo/GoogleLogo";
 import FacebookLogo from "@/components/logo/FacebookLogo";
@@ -20,6 +21,7 @@ import FacebookLogo from "@/components/logo/FacebookLogo";
 export default function Auth() {
   const { colors } = useTheme();
   const { login: authLogin } = useAuth();
+  const { t } = useLocalization();
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
 
@@ -44,11 +46,11 @@ export default function Auth() {
   };
 
   const handleGoogleLogin = async () => {
-    Alert.alert("Info", "Connexion Google à implémenter");
+    Alert.alert("Info", t("googleLoginInfo"));
   };
 
   const handleFacebookLogin = async () => {
-    Alert.alert("Info", "Connexion Facebook à implémenter");
+    Alert.alert("Info", t("facebookLoginInfo"));
   };
 
   const toggleMode = () => {
@@ -108,7 +110,7 @@ export default function Auth() {
                     color: colors.mutedForeground,
                   }}
                 >
-                  ou
+                  {t("or")}
                 </Text>
                 <View
                   style={{
@@ -141,9 +143,7 @@ export default function Auth() {
                     color: "#525252",
                   }}
                 >
-                  {isLogin
-                    ? "Se connecter avec Google"
-                    : "S'inscrire avec Google"}
+                  {isLogin ? t("loginWithGoogle") : t("registerWithGoogle")}
                 </Text>
               </Button>
 
@@ -170,20 +170,18 @@ export default function Auth() {
                     color: "#FFFFFF",
                   }}
                 >
-                  {isLogin
-                    ? "Se connecter avec Facebook"
-                    : "S'inscrire avec Facebook"}
+                  {isLogin ? t("loginWithFacebook") : t("registerWithFacebook")}
                 </Text>
               </Button>
             </YStack>
 
             <XStack alignItems="center" justifyContent="center" space="$1">
               <Text style={{ color: colors.mutedForeground }}>
-                {isLogin ? "Pas encore inscrit ?" : "Déjà inscrit ?"}
+                {isLogin ? t("notRegisteredYet") : t("alreadyRegistered")}
               </Text>
               <TouchableOpacity onPress={toggleMode}>
                 <Text style={{ color: colors.primary, fontWeight: "600" }}>
-                  {isLogin ? "Inscrivez-vous" : "Se connecter"}
+                  {isLogin ? t("registerButtonText") : t("signIn")}
                 </Text>
               </TouchableOpacity>
             </XStack>
@@ -198,23 +196,23 @@ export default function Auth() {
                   lineHeight: 16,
                 }}
               >
-                En continuant, vous acceptez nos{" "}
+                {t("continueAccepting")}{" "}
                 <Text
                   style={{
                     color: colors.primary,
                     textDecorationLine: "underline",
                   }}
                 >
-                  Conditions d&apos;utilisation
+                  {t("termsOfService")}
                 </Text>{" "}
-                et notre{" "}
+                {t("and")}{" "}
                 <Text
                   style={{
                     color: colors.primary,
                     textDecorationLine: "underline",
                   }}
                 >
-                  Politique de confidentialité
+                  {t("privacyPolicy")}
                 </Text>
               </Text>
               <Text
@@ -225,7 +223,7 @@ export default function Auth() {
                   opacity: 0.8,
                 }}
               >
-                Vos données sont protégées conformément au RGPD
+                {t("dataProtected")}
               </Text>
             </YStack>
           </YStack>

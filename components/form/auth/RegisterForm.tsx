@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import {
-  TextInput,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { TextInput, View, TouchableOpacity } from "react-native";
 import { YStack, XStack } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import { useSendVerification, useRegister } from "../../../hooks/auth";
 import { AlertFormError } from "../../alert";
 import VerificationModal from "./VerificationModal";
@@ -18,6 +15,7 @@ interface RegisterFormProps {
 
 export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const {
     sendVerification,
     isLoading: sendLoading,
@@ -57,17 +55,17 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
       !formData.firstName ||
       !formData.lastName
     ) {
-      setValidationError("Veuillez remplir tous les champs");
+      setValidationError(t("registerFillAllFields"));
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setValidationError("Les mots de passe ne correspondent pas");
+      setValidationError(t("registerPasswordsDoNotMatch"));
       return;
     }
 
     if (formData.password.length < 6) {
-      setValidationError("Le mot de passe doit contenir au moins 6 caractères");
+      setValidationError(t("registerPasswordTooShort"));
       return;
     }
 
@@ -108,7 +106,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
       <YStack space="$4">
         <XStack space="$4">
           <TextInput
-            placeholder="Prénom"
+            placeholder={t("registerFirstNamePlaceholder")}
             placeholderTextColor={colors.mutedForeground as any}
             value={formData.firstName}
             onChangeText={(text) => updateField("firstName", text)}
@@ -126,7 +124,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
             }}
           />
           <TextInput
-            placeholder="Nom"
+            placeholder={t("registerLastNamePlaceholder")}
             placeholderTextColor={colors.mutedForeground as any}
             value={formData.lastName}
             onChangeText={(text) => updateField("lastName", text)}
@@ -147,7 +145,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
 
         <YStack space="$3">
           <TextInput
-            placeholder="Email"
+            placeholder={t("registerEmailPlaceholder")}
             placeholderTextColor={colors.mutedForeground as any}
             value={formData.email}
             onChangeText={(text) => updateField("email", text)}
@@ -165,7 +163,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
           />
           <View style={{ position: "relative" }}>
             <TextInput
-              placeholder="Mot de passe"
+              placeholder={t("registerPasswordPlaceholder")}
               placeholderTextColor={colors.mutedForeground as any}
               value={formData.password}
               onChangeText={(text) => updateField("password", text)}
@@ -205,7 +203,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
           </View>
           <View style={{ position: "relative" }}>
             <TextInput
-              placeholder="Confirmer le mot de passe"
+              placeholder={t("registerConfirmPasswordPlaceholder")}
               placeholderTextColor={colors.mutedForeground as any}
               value={formData.confirmPassword}
               onChangeText={(text) => updateField("confirmPassword", text)}
@@ -249,7 +247,7 @@ export default function RegisterForm({ onRegisterSuccess }: RegisterFormProps) {
 
         <ButtonGradient
           onPress={handleSendVerification}
-          title="Inscription"
+          title={t("registerButton")}
           isLoading={currentLoading}
           disabled={currentLoading}
         />

@@ -3,6 +3,7 @@ import { TouchableOpacity, TextInput, View } from "react-native";
 import { YStack, Text } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import { useLogin } from "../../../hooks/auth";
 import { AlertFormError } from "../../alert";
 import { ButtonGradient } from "../../common";
@@ -13,6 +14,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const { login, isLoading, error, clearError } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -40,7 +42,7 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
   return (
     <YStack space="$4">
       <TextInput
-        placeholder="Email"
+        placeholder={t("email")}
         placeholderTextColor={colors.mutedForeground as any}
         value={formData.email}
         onChangeText={(text) => updateField("email", text)}
@@ -60,7 +62,7 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
       <YStack space="$2">
         <View style={{ position: "relative" }}>
           <TextInput
-            placeholder="Mot de passe"
+            placeholder={t("password")}
             placeholderTextColor={colors.mutedForeground as any}
             value={formData.password}
             onChangeText={(text) => updateField("password", text)}
@@ -110,7 +112,7 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
               marginRight: 10,
             }}
           >
-            Mot de passe oublié ?
+            {t("forgotPassword")}
           </Text>
         </TouchableOpacity>
       </YStack>
@@ -119,7 +121,7 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
 
       <ButtonGradient
         onPress={handleLogin}
-        title="Se connecter"
+        title={t("login")}
         isLoading={isLoading}
         disabled={isLoading}
       />
