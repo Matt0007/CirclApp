@@ -55,7 +55,10 @@ export default function ConfirmationModal({
         <View style={styles.overlay}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View
-              style={[styles.modalContainer, { backgroundColor: colors.background }]}
+              style={[
+                styles.modalContainer,
+                { backgroundColor: colors.background },
+              ]}
             >
               {/* Contenu */}
               <View style={styles.content}>

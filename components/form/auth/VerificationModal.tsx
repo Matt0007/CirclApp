@@ -77,7 +77,7 @@ export default function VerificationModal({
     <Modal
       visible={visible}
       transparent={true}
-      animationType="slide"
+      animationType="fade"
       onRequestClose={handleClose}
       statusBarTranslucent={true}
     >
@@ -95,7 +95,7 @@ export default function VerificationModal({
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View
               style={{
-                backgroundColor: colors.card,
+                backgroundColor: colors.background,
                 borderRadius: 16,
                 padding: 24,
                 margin: 20,
