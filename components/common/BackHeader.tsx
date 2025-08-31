@@ -30,8 +30,6 @@ export const BackHeader: React.FC<BackHeaderProps> = ({
       justifyContent="space-between"
       alignItems="center"
       paddingHorizontal="$4"
-      borderBottomWidth={1}
-      borderBottomColor={colors.border}
       backgroundColor={colors.background}
 
     >
