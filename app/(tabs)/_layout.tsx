@@ -66,6 +66,15 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
+          name="more"
+          options={{
+            title: "Plus",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="add-circle" size={size * 1.1} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="sport"
           options={{
             title: "Sport",

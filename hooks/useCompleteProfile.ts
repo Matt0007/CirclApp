@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Alert } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 import { API_BASE_URL } from "../config/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface ProfileData {
   gender: string;
@@ -45,11 +46,19 @@ export const useCompleteProfile = (): UseCompleteProfileReturn => {
         profileImage: profileData.profileImage,
       };
 
+      // Récupérer le token depuis AsyncStorage
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("Token d'authentification requis");
+      }
+
       // Appeler l'API pour finaliser le profil
       const response = await fetch(`${API_BASE_URL}/profile/complete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           userId: user.id,
