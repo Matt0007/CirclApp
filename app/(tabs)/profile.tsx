@@ -18,6 +18,7 @@ export default function Profile() {
   const { colors } = useTheme();
   const { user, isAuthenticated, secureImageUrl, refreshUserData } = useAuth();
   const insets = useSafeAreaInsets();
+  const [isNavigating, setIsNavigating] = React.useState(false);
 
   // Refresh des données quand on arrive sur le profil
   useFocusEffect(
@@ -29,6 +30,19 @@ export default function Profile() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated])
   );
+
+  // Fonction pour naviguer avec protection contre les clics multiples
+  const handleNavigation = (route: string) => {
+    if (isNavigating) return;
+
+    setIsNavigating(true);
+    router.push(route);
+
+    // Réactiver après un délai
+    setTimeout(() => {
+      setIsNavigating(false);
+    }, 1000);
+  };
 
   // Rediriger vers la page d'authentification si l'utilisateur n'est pas connecté
   if (!isAuthenticated || !user) {
@@ -89,6 +103,8 @@ export default function Profile() {
             pressStyle={{ backgroundColor: "transparent" }}
             borderWidth={0}
             outlineColor="transparent"
+            disabled={isNavigating}
+            opacity={isNavigating ? 0.5 : 1}
           >
             <Ionicons
               name="notifications-outline"
@@ -105,7 +121,9 @@ export default function Profile() {
             pressStyle={{ backgroundColor: "transparent" }}
             borderWidth={0}
             outlineColor="transparent"
-            onPress={() => router.push("/(backPage)/settings")}
+            onPress={() => handleNavigation("/(backPage)/settings")}
+            disabled={isNavigating}
+            opacity={isNavigating ? 0.5 : 1}
           >
             <Ionicons name="menu" size={24} color={colors.foreground} />
           </Button>

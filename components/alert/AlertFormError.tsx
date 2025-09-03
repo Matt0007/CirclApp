@@ -19,21 +19,17 @@ export default function AlertFormError({
 
   return (
     <YStack
-      backgroundColor="rgba(220, 38, 38, 0.1)"
+      backgroundColor={`${colors.destructive}10`}
       padding={16}
       borderRadius={12}
-      shadowColor={colors.destructive}
-      shadowOffset={{ width: 0, height: 4 }}
-      shadowOpacity={0.2}
-      shadowRadius={8}
-      elevation={6}
       marginBottom={20}
       width="100%"
     >
       <Text
+        backgroundColor="transparent"
         color={colors.destructive}
         textAlign="center"
-        fontSize={14}
+        fontSize={13.5}
         fontWeight="500"
       >
         {error}

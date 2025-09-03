@@ -118,7 +118,7 @@ export default function LoginForm({ onLoginSuccess }: LoginFormProps) {
       </YStack>
 
       <AlertFormError error={error} />
-
+      
       <ButtonGradient
         onPress={handleLogin}
         title={t("login")}
