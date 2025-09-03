@@ -17,7 +17,6 @@ export const useUserSports = () => {
 
   const fetchUserSports = useCallback(async () => {
     if (!user?.id) {
-      console.log("❌ Pas d'utilisateur:", { userId: user?.id });
       setLoading(false);
       return;
     }
@@ -26,7 +25,6 @@ export const useUserSports = () => {
     const token = await AsyncStorage.getItem("token");
 
     if (!token) {
-      console.log("❌ Pas de token dans AsyncStorage");
       setLoading(false);
       return;
     }
@@ -35,9 +33,6 @@ export const useUserSports = () => {
       setLoading(true);
       setError(null);
 
-      console.log("🔍 Récupération des sports pour l'utilisateur:", user.id);
-      console.log("🔗 URL:", `${API_BASE_URL}/users/${user.id}/sports`);
-
       const response = await fetch(`${API_BASE_URL}/users/${user.id}/sports`, {
         method: "GET",
         headers: {
@@ -45,12 +40,6 @@ export const useUserSports = () => {
           "Content-Type": "application/json",
         },
       });
-
-      console.log("📡 Status de la réponse:", response.status);
-      console.log(
-        "📡 Headers de la réponse:",
-        Object.fromEntries(response.headers.entries())
-      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -61,7 +50,6 @@ export const useUserSports = () => {
       }
 
       const data = await response.json();
-      console.log("✅ Données reçues:", data);
       setSports(data);
     } catch (err) {
       console.error("❌ Erreur lors de la récupération des sports:", err);

@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 import { API_BASE_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useImageUpload } from "./useImageUpload";
 
 interface ProfileData {
   gender: string;
@@ -19,6 +20,7 @@ interface UseCompleteProfileReturn {
 
 export const useCompleteProfile = (): UseCompleteProfileReturn => {
   const { user } = useAuth();
+  const { uploadImage } = useImageUpload();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const completeProfile = async (
@@ -32,6 +34,26 @@ export const useCompleteProfile = (): UseCompleteProfileReturn => {
     setIsSubmitting(true);
 
     try {
+      // Upload de l'image si elle existe
+      let finalImageUrl = null;
+      if (
+        profileData.profileImage &&
+        profileData.profileImage.startsWith("file://")
+      ) {
+        try {
+          finalImageUrl = await uploadImage(profileData.profileImage);
+        } catch (error) {
+          console.error("Erreur lors de l'upload de l'image:", error);
+          Alert.alert(
+            "Attention",
+            "L'image n'a pas pu être uploadée, mais le profil sera créé sans image."
+          );
+        }
+      } else if (profileData.profileImage) {
+        // Si c'est déjà une URL (déjà uploadée)
+        finalImageUrl = profileData.profileImage;
+      }
+
       // Préparer les données du profil
       const apiProfileData = {
         gender:
@@ -43,7 +65,7 @@ export const useCompleteProfile = (): UseCompleteProfileReturn => {
         birthDate: profileData.birthDate?.toISOString(),
         city: profileData.city,
         selectedSports: profileData.selectedSports,
-        profileImage: profileData.profileImage,
+        profileImage: finalImageUrl,
       };
 
       // Récupérer le token depuis AsyncStorage

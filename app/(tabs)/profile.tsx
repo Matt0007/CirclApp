@@ -1,18 +1,34 @@
 import React from "react";
 import { ScrollView } from "react-native";
 import { Text, View, XStack, YStack, Button } from "tamagui";
+import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
-import { useUserSports } from "../../hooks/useUserSports";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { ButtonGradient } from "@/components/common";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Profile() {
   const { colors } = useTheme();
-  const { user, isAuthenticated } = useAuth();
-  const { sports, loading: sportsLoading } = useUserSports();
+  const { user, isAuthenticated, secureImageUrl, refreshUserData } = useAuth();
+  const insets = useSafeAreaInsets();
+
+  // Refresh des données quand on arrive sur le profil
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isAuthenticated) {
+        console.log("🔄 Refresh des données utilisateur...");
+        refreshUserData();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAuthenticated])
+  );
 
   // Rediriger vers la page d'authentification si l'utilisateur n'est pas connecté
   if (!isAuthenticated || !user) {
@@ -35,92 +51,124 @@ export default function Profile() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header avec nom et boutons d'action */}
-        <XStack
-          justifyContent="space-between"
-          alignItems="center"
-          paddingHorizontal="$4"
-          paddingVertical="$4"
-        >
-          {/* Nom complet */}
-          <View flex={1}>
-            <Text
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+        paddingTop: insets.top,
+      }}
+    >
+      {/* Header fixe avec nom et boutons d'action */}
+      <XStack
+        justifyContent="space-between"
+        alignItems="center"
+        paddingHorizontal="$4"
+        paddingVertical="$2"
+        backgroundColor={colors.background}
+      >
+        {/* Nom complet */}
+        <View flex={1}>
+          <Text
+            color={colors.foreground}
+            fontSize="$7"
+            fontWeight="800"
+            numberOfLines={1}
+          >
+            {user.firstName} {user.lastName}
+          </Text>
+        </View>
+
+        {/* Boutons d'action */}
+        <XStack space="$3" alignItems="center">
+          <Button
+            size="$3"
+            circular
+            backgroundColor="transparent"
+            focusStyle={{ backgroundColor: "transparent" }}
+            hoverStyle={{ backgroundColor: "transparent" }}
+            pressStyle={{ backgroundColor: "transparent" }}
+            borderWidth={0}
+            outlineColor="transparent"
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={24}
               color={colors.foreground}
-              fontSize="$7"
-              fontWeight="800"
-              numberOfLines={1}
-            >
-              {user.firstName} {user.lastName}
-            </Text>
-          </View>
-
-          {/* Boutons d'action */}
-          <XStack space="$3" alignItems="center">
-            <Button
-              size="$3"
-              circular
-              backgroundColor="transparent"
-              focusStyle={{ backgroundColor: 'transparent' }}
-              hoverStyle={{ backgroundColor: 'transparent' }}
-              pressStyle={{ backgroundColor: 'transparent' }}
-
-              borderWidth={0}
-              outlineColor="transparent"
-            >
-              <Ionicons
-                name="notifications-outline"
-                size={24}
-                color={colors.foreground}
-              />
-            </Button>
-            <Button
-              size="$3"
-              circular
-              backgroundColor="transparent"
-              focusStyle={{ backgroundColor: 'transparent' }}
-              hoverStyle={{ backgroundColor: 'transparent' }}
-              pressStyle={{ backgroundColor: 'transparent' }}
-              borderWidth={0}
-              outlineColor="transparent"
-              onPress={() => router.push("/(backPage)/settings")}
-            >
-              <Ionicons name="menu" size={24} color={colors.foreground} />
-            </Button>
-          </XStack>
+            />
+          </Button>
+          <Button
+            size="$3"
+            circular
+            backgroundColor="transparent"
+            focusStyle={{ backgroundColor: "transparent" }}
+            hoverStyle={{ backgroundColor: "transparent" }}
+            pressStyle={{ backgroundColor: "transparent" }}
+            borderWidth={0}
+            outlineColor="transparent"
+            onPress={() => router.push("/(backPage)/settings")}
+          >
+            <Ionicons name="menu" size={24} color={colors.foreground} />
+          </Button>
         </XStack>
+      </XStack>
 
+      {/* Contenu scrollable */}
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Section principale du profil */}
         <YStack paddingHorizontal="$4" paddingTop="$5" space="$5">
           {/* Informations du profil */}
           <XStack space="$5" alignItems="flex-start">
             {/* Avatar */}
             <View
-              width={90}
-              height={90}
-              borderRadius={45}
-              overflow="hidden"
-              backgroundColor={colors.accent}
-              borderWidth={3}
-              borderColor={colors.primary}
-              shadowColor={colors.foreground}
-              shadowOffset={{ width: 0, height: 2 }}
-              shadowOpacity={0.1}
-              shadowRadius={4}
+              style={{
+                width: 90,
+                height: 90,
+                borderRadius: 45,
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+              }}
             >
+              {/* Dégradé de la bordure */}
+              <LinearGradient
+                colors={[colors.primary, colors.primary + "80", colors.primary]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  position: "absolute",
+                  width: 90,
+                  height: 90,
+                  borderRadius: 45,
+                }}
+              />
+
+              {/* Cercle intérieur */}
               <View
-                width="100%"
-                height="100%"
-                backgroundColor={colors.accent}
-                justifyContent="center"
-                alignItems="center"
+                style={{
+                  width: 84,
+                  height: 84,
+                  borderRadius: 42,
+                  backgroundColor: colors.card,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  overflow: "hidden",
+                }}
               >
-                <Ionicons
-                  name="person"
-                  size={45}
-                  color={colors.mutedForeground}
-                />
+                {secureImageUrl && secureImageUrl !== null ? (
+                  <Image
+                    source={{ uri: secureImageUrl }}
+                    style={{
+                      width: 84,
+                      height: 84,
+                      borderRadius: 42,
+                    }}
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
+                    transition={100}
+                  />
+                ) : (
+                  <Ionicons name="person" size={40} color={colors.primary} />
+                )}
               </View>
             </View>
 
@@ -205,25 +253,10 @@ export default function Profile() {
               contentContainerStyle={{ paddingRight: 16 }}
             >
               <XStack space="$3">
-                {sportsLoading ? (
-                  <View
-                    paddingHorizontal="$3"
-                    paddingVertical="$2"
-                    backgroundColor={colors.muted}
-                    borderRadius="$3"
-                  >
-                    <Text
-                      color={colors.mutedForeground}
-                      fontSize="$2"
-                      fontWeight="500"
-                    >
-                      Chargement...
-                    </Text>
-                  </View>
-                ) : sports.length > 0 ? (
-                  sports.map((sport) => (
+                {user.userSports && user.userSports.length > 0 ? (
+                  user.userSports.map((userSport) => (
                     <View
-                      key={sport.id}
+                      key={userSport.id}
                       paddingHorizontal="$3"
                       paddingVertical="$2"
                       backgroundColor={colors.accent}
@@ -234,7 +267,7 @@ export default function Profile() {
                         fontSize="$2"
                         fontWeight="500"
                       >
-                        {sport.name}
+                        {userSport.sport.name}
                       </Text>
                     </View>
                   ))
@@ -259,6 +292,6 @@ export default function Profile() {
           </YStack>
         </YStack>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

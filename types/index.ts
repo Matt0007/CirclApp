@@ -1,3 +1,19 @@
+// Types pour les sports
+export interface Sport {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
+
+// Types pour les sports utilisateur
+export interface UserSport {
+  id: string;
+  userId: string;
+  sportId: string;
+  createdAt: string;
+  sport: Sport;
+}
+
 // Types pour l'authentification
 export interface User {
   id: string;
@@ -8,6 +24,7 @@ export interface User {
   profileImage?: string;
   createdAt: string;
   updatedAt: string;
+  userSports?: UserSport[];
 }
 
 // Types pour le thème

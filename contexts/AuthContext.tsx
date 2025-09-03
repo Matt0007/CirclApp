@@ -6,13 +6,14 @@ import React, {
   ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User } from "../types";
+import { User, UserSport } from "../types";
 import { API_BASE_URL } from "../config/api";
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  secureImageUrl: string | null;
   login: (userData: {
     id: string;
     email: string;
@@ -21,6 +22,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
   refreshUserData: () => Promise<void>;
+  updateUserSports: (newSports: UserSport[]) => void;
+  updateProfileImage: (newImageUrl: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,8 +35,52 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [secureImageUrl, setSecureImageUrl] = useState<string | null>(null);
 
   const isAuthenticated = !!user;
+
+  // Générer l'URL sécurisée pour l'image de profil
+  const generateSecureImageUrl = async (
+    imageUrl: string | null
+  ): Promise<string | null> => {
+    if (!imageUrl) return null;
+
+    // Si c'est déjà une URL de notre API privée, l'utiliser directement
+    if (imageUrl.includes("/images/profile/")) {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return null;
+
+        // Créer une URL avec le token d'authentification
+        const url = new URL(imageUrl);
+        url.searchParams.set("token", token);
+        return url.toString();
+      } catch (error) {
+        console.error(
+          "Erreur lors de la génération de l'URL sécurisée:",
+          error
+        );
+        return null;
+      }
+    } else {
+      // URL publique, l'utiliser directement
+      return imageUrl;
+    }
+  };
+
+  // Mettre à jour secureImageUrl quand user.profileImage change
+  useEffect(() => {
+    const updateSecureImageUrl = async () => {
+      if (user?.profileImage) {
+        const secureUrl = await generateSecureImageUrl(user.profileImage);
+        setSecureImageUrl(secureUrl);
+      } else {
+        setSecureImageUrl(null);
+      }
+    };
+
+    updateSecureImageUrl();
+  }, [user?.profileImage]);
 
   // Fonction pour récupérer les données utilisateur depuis l'API
   const fetchUserData = async (token: string): Promise<User | null> => {
@@ -137,18 +184,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateUserSports = (newSports: UserSport[]) => {
+    setUser((prev) => (prev ? { ...prev, userSports: newSports } : null));
+  };
+
+  const updateProfileImage = (newImageUrl: string) => {
+    setUser((prev) => (prev ? { ...prev, profileImage: newImageUrl } : null));
+  };
+
   useEffect(() => {
     checkAuthStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const value: AuthContextType = {
     user,
     isLoading,
     isAuthenticated,
+    secureImageUrl,
     login,
     logout,
     checkAuthStatus,
     refreshUserData,
+    updateUserSports,
+    updateProfileImage,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, Modal, Image, Platform } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Modal,
+  Image,
+  Platform,
+  Alert,
+} from "react-native";
 import { YStack, Text } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLocalization } from "../../contexts/LocalizationContext";
 import ButtonGradient from "../common/ButtonGradient";
+import * as ImagePicker from "expo-image-picker";
 
 interface BasicProfileInputProps {
   profileImage: string | null;
@@ -41,15 +48,22 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   }, [birthDate]);
 
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.8,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
 
-    if (!result.canceled && result.assets[0]) {
-      onProfileImageChange(result.assets[0].uri);
+      if (!result.canceled && result.assets[0]) {
+        onProfileImageChange(result.assets[0].uri);
+      }
+    } catch {
+      Alert.alert(
+        "Erreur",
+        "Impossible de sélectionner l'image. Veuillez réessayer."
+      );
     }
   };
 
@@ -146,6 +160,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                       height: 114,
                       borderRadius: 57,
                     }}
+                    resizeMode="cover"
                   />
                 </>
               ) : (

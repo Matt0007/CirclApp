@@ -2,8 +2,10 @@ import React, { useState, useRef } from "react";
 import { YStack, Text, XStack } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Dimensions, View } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 import { useLocalization } from "../contexts/LocalizationContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useRouter } from "expo-router";
 import {
   BasicProfileInput,
@@ -18,7 +20,18 @@ const { width: screenWidth } = Dimensions.get("window");
 export default function CompleteProfilCombined() {
   const { colors } = useTheme();
   const { t } = useLocalization();
+  const { updateUserSports, updateProfileImage } = useAuth();
   const router = useRouter();
+
+  // Désactiver le swipe retour
+  const navigation = useNavigation();
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.setOptions({
+        gestureEnabled: false,
+      });
+    }, [navigation])
+  );
   const scrollViewRef = useRef<ScrollView>(null);
   const { isSubmitting, completeProfile } = useCompleteProfile();
 
@@ -76,6 +89,30 @@ export default function CompleteProfilCombined() {
     const success = await completeProfile(profileData);
 
     if (success) {
+      // Mettre à jour l'image dans AuthContext si une image a été sélectionnée
+      if (profileImage) {
+        updateProfileImage(profileImage);
+      }
+
+      // Mettre à jour les sports dans AuthContext si des sports ont été sélectionnés
+      if (selectedSports.length > 0) {
+        // Créer les UserSport objects basés sur les sports sélectionnés
+        const newUserSports = selectedSports.map((sportName, index) => ({
+          id: `temp-${index}`, // ID temporaire
+          userId: "current-user", // Sera remplacé par l'API
+          sportId: `sport-${index}`, // Sera remplacé par l'API
+          createdAt: new Date().toISOString(),
+          sport: {
+            id: `sport-${index}`,
+            name: sportName,
+            isActive: true,
+          },
+        }));
+
+        // Mettre à jour AuthContext immédiatement
+        updateUserSports(newUserSports);
+      }
+
       // Rediriger vers la page de félicitations
       router.replace("/profile-completed");
     }
@@ -90,7 +127,7 @@ export default function CompleteProfilCombined() {
     }
   };
 
-  const isStep1Valid = gender && birthDate;
+  const isStep1Valid = gender && birthDate && profileImage;
   const isStep2Valid = city && isCityValid && selectedSports.length > 0;
 
   return (
