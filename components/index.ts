@@ -13,5 +13,4 @@ export * from "./profileForm";
 // Route components
 export * from "./route";
 
-// Other components
-export { ThemeToggle } from "./ThemeToggle";
+

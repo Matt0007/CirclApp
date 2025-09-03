@@ -111,4 +111,9 @@ export default {
   logout: "Logout",
   logoutConfirm: "Do you really want to logout?",
   account: "Account",
+
+  // Theme
+  selectTheme: "Select Theme",
+  automatic: "Automatic",
+  followSystem: "Follow system",
 };

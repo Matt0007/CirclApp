@@ -34,7 +34,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.card }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header avec titre et bouton fermer */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.foreground }]}>
@@ -54,6 +54,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
           style={[
             styles.deviceLanguageCard,
             { borderColor: colors.border },
+            { backgroundColor: colors.card },
             useDeviceLanguage && {
               borderColor: colors.primary,
               backgroundColor: colors.primary + "10",
@@ -108,6 +109,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onClose }) => {
               style={[
                 styles.languageCard,
                 { borderColor: colors.border },
+                { backgroundColor: colors.card },
                 locale === language.code &&
                   !useDeviceLanguage && {
                     borderColor: colors.primary,

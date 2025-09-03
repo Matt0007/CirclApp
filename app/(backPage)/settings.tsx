@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, Modal, TouchableOpacity, StatusBar } from "react-native";
-import { Text, View, XStack, YStack, H2, Switch, ListItem } from "tamagui";
+import { Text, View, XStack, YStack, H2, ListItem } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocalization } from "../../contexts/LocalizationContext";
@@ -8,14 +8,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { BackHeader } from "../../components/common/BackHeader";
 import LanguageSelector from "../../components/common/LanguageSelector";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
+import { ThemeSelector } from "../../components/settings/ThemeSelector";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Settings() {
-  const { colors, colorScheme, toggleTheme } = useTheme();
+  const { colors, colorScheme } = useTheme();
   const { logout } = useAuth();
   const { t, locale } = useLocalization();
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
@@ -50,46 +52,53 @@ export default function Settings() {
             >
               <ListItem
                 backgroundColor="transparent"
-                borderBottomWidth={1}
-                borderBottomColor={colors.border}
                 paddingVertical="$4"
                 paddingHorizontal="$4"
+                onPress={() => setShowThemeSelector(true)}
               >
                 <XStack
                   flex={1}
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <YStack>
-                    <Text
-                      color={colors.foreground}
-                      fontSize="$4"
-                      fontWeight="500"
+                  <XStack space="$3" alignItems="center">
+                    <View
+                      backgroundColor={colors.accent}
+                      borderRadius="$2"
+                      padding="$2"
                     >
-                      {t("darkMode")}
-                    </Text>
-                    <Text
-                      color={colors.mutedForeground}
-                      fontSize="$2"
-                      marginTop="$1"
-                    >
-                      {colorScheme === "dark" ? t("darkMode") : t("lightMode")}
-                    </Text>
-                  </YStack>
-                  <Switch
-                    checked={colorScheme === "dark"}
-                    onCheckedChange={toggleTheme}
-                    backgroundColor={colors.accent}
-                    borderColor={colors.border}
-                  >
-                    <Switch.Thumb
-                      backgroundColor={
-                        colorScheme === "dark"
-                          ? colors.primary
-                          : colors.foreground
-                      }
-                    />
-                  </Switch>
+                      <Ionicons
+                        name="color-palette"
+                        size={20}
+                        color={colors.foreground}
+                      />
+                    </View>
+                    <YStack>
+                      <Text
+                        color={colors.foreground}
+                        fontSize="$4"
+                        fontWeight="500"
+                      >
+                        {t("theme")}
+                      </Text>
+                      <Text
+                        color={colors.mutedForeground}
+                        fontSize="$2"
+                        marginTop="$1"
+                      >
+                        {colorScheme === "auto"
+                          ? t("automatic")
+                          : colorScheme === "dark"
+                          ? t("darkMode")
+                          : t("lightMode")}
+                      </Text>
+                    </YStack>
+                  </XStack>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={20}
+                    color={colors.mutedForeground}
+                  />
                 </XStack>
               </ListItem>
             </View>
@@ -521,6 +530,7 @@ export default function Settings() {
           activeOpacity={1}
           onPress={() => setShowLanguageSelector(false)}
         >
+
           <StatusBar
             barStyle="light-content"
             backgroundColor="transparent"
@@ -534,6 +544,12 @@ export default function Settings() {
           </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
+
+      {/* Modal de sélection de thème */}
+      <ThemeSelector
+        visible={showThemeSelector}
+        onClose={() => setShowThemeSelector(false)}
+      />
 
       {/* Modal de confirmation de déconnexion */}
       <ConfirmationModal

@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useColorScheme } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lightColors, darkColors } from "../utils/colors";
 import { ColorScheme, ThemeColors } from "../types";
 
@@ -22,27 +23,66 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
+const THEME_STORAGE_KEY = "@theme";
+
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const systemColorScheme = useColorScheme();
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("auto");
 
+  // Charger le thème sauvegardé au démarrage
   useEffect(() => {
-    if (systemColorScheme) {
-      setColorScheme(systemColorScheme);
-    }
-  }, [systemColorScheme]);
+    loadSavedTheme();
+  }, []);
 
-  const colors = colorScheme === "dark" ? darkColors : lightColors;
+  const loadSavedTheme = async () => {
+    try {
+      const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+      if (savedTheme) {
+        setColorScheme(savedTheme as ColorScheme);
+      }
+    } catch (error) {
+      console.error("❌ Error loading theme:", error);
+    }
+  };
+
+  // Sauvegarder le thème quand il change
+  const saveTheme = async (theme: ColorScheme) => {
+    try {
+      await AsyncStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch (error) {
+      console.error("❌ Error saving theme:", error);
+    }
+  };
+
+  // Déterminer les couleurs en fonction du mode
+  const getCurrentColorScheme = (): "light" | "dark" => {
+    if (colorScheme === "auto") {
+      return systemColorScheme || "light";
+    }
+    return colorScheme;
+  };
+
+  const colors = getCurrentColorScheme() === "dark" ? darkColors : lightColors;
 
   const toggleTheme = () => {
-    setColorScheme((prev) => (prev === "light" ? "dark" : "light"));
+    setColorScheme((prev) => {
+      const newTheme =
+        prev === "auto" ? "light" : prev === "light" ? "dark" : "auto";
+      saveTheme(newTheme);
+      return newTheme;
+    });
+  };
+
+  const updateColorScheme = (scheme: ColorScheme) => {
+    setColorScheme(scheme);
+    saveTheme(scheme);
   };
 
   const value: ThemeContextType = {
     colorScheme,
     colors,
     toggleTheme,
-    setColorScheme,
+    setColorScheme: updateColorScheme,
   };
 
   return (

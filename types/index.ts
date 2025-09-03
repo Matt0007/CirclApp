@@ -28,7 +28,7 @@ export interface User {
 }
 
 // Types pour le thème
-export type ColorScheme = "light" | "dark";
+export type ColorScheme = "auto" | "light" | "dark";
 
 // Types pour les couleurs
 export interface ThemeColors {

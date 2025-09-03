@@ -98,6 +98,11 @@ export default {
   snowboard: "Snowboard",
   skateboard: "Skateboard",
   dance: "Danse",
+
+  // Theme
+  selectTheme: "Sélectionner le thème",
+  automatic: "Automatique",
+  followSystem: "Suivre le système",
   fencing: "Escrime",
 
   // Settings
