@@ -190,7 +190,6 @@ export default function PublicProfile() {
         followingCount={0}
         secureImageUrl={secureImageUrl}
       />
-
     </View>
   );
 }

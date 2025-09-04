@@ -12,6 +12,19 @@ export default {
     resizeMode: "contain",
     backgroundColor: "#D97706"
   },
+  android: {
+    backgroundColor: "#1C1C1E", // Couleur de fond par défaut pour le mode sombre
+    adaptiveIcon: {
+      foregroundImage: "./assets/images/adaptive-icon.png",
+      backgroundColor: "#1C1C1E"
+    },
+    // Configuration pour éviter les pages blanches
+    navigationBarColor: "#1C1C1E",
+  },
+  ios: {
+    backgroundColor: "#1C1C1E", // Couleur de fond par défaut pour le mode sombre
+    supportsTablet: true
+  },
   updates: {
     url: "https://u.expo.dev/48bed89c-0471-40fc-aebd-7db3bd151a96"
   },

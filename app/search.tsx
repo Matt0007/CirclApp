@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, TextInput, TouchableOpacity, Keyboard } from "react-native";
+import {
+  View,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 import { Text, XStack, Button } from "tamagui";
 import { useTheme } from "../contexts/ThemeContext";
 import { useSecureImage } from "../hooks/useSecureImage";
