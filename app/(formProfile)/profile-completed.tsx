@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 import { View, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { YStack, Text } from "tamagui";
-import { useTheme } from "../contexts/ThemeContext";
-import { useLocalization } from "../contexts/LocalizationContext";
+import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import { useRouter } from "expo-router";
-import ButtonGradient from "../components/common/ButtonGradient";
+import ButtonGradient from "../../components/common/ButtonGradient";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function ProfileCompleted() {

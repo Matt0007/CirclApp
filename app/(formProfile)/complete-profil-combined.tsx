@@ -3,17 +3,17 @@ import { YStack, Text, XStack } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, Dimensions, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useTheme } from "../contexts/ThemeContext";
-import { useLocalization } from "../contexts/LocalizationContext";
-import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useRouter } from "expo-router";
 import {
   BasicProfileInput,
   CityInput,
   SportInput,
-} from "../components/profileForm";
-import ButtonGradient from "../components/common/ButtonGradient";
-import { useCompleteProfile } from "../hooks";
+} from "../../components/profileForm";
+import ButtonGradient from "../../components/common/ButtonGradient";
+import { useCompleteProfile } from "../../hooks";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -114,7 +114,7 @@ export default function CompleteProfilCombined() {
       }
 
       // Rediriger vers la page de félicitations
-      router.replace("/profile-completed");
+      router.replace("/(formProfile)/profile-completed");
     }
   };
 

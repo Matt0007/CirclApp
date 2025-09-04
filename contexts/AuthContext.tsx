@@ -8,6 +8,7 @@ import React, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User, UserSport } from "../types";
 import { API_BASE_URL } from "../config/api";
+import { getSecureImageUrl } from "../config/imageToken";
 
 interface AuthContextType {
   user: User | null;
@@ -45,27 +46,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   ): Promise<string | null> => {
     if (!imageUrl) return null;
 
-    // Si c'est déjà une URL de notre API privée, l'utiliser directement
-    if (imageUrl.includes("/images/profile/")) {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) return null;
-
-        // Créer une URL avec le token d'authentification
-        const url = new URL(imageUrl);
-        url.searchParams.set("token", token);
-        return url.toString();
-      } catch (error) {
-        console.error(
-          "Erreur lors de la génération de l'URL sécurisée:",
-          error
-        );
-        return null;
-      }
-    } else {
-      // URL publique, l'utiliser directement
-      return imageUrl;
-    }
+    // Utiliser la fonction centralisée getSecureImageUrl
+    return getSecureImageUrl(imageUrl);
   };
 
   // Mettre à jour secureImageUrl quand user.profileImage change

@@ -42,7 +42,7 @@ export default function Auth() {
       token: result.token,
     });
     // Rediriger vers la page de complétion du profil combinée après inscription réussie
-    router.replace("/complete-profil-combined");
+    router.replace("/(formProfile)/complete-profil-combined");
   };
 
   const handleGoogleLogin = async () => {

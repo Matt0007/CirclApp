@@ -2,9 +2,9 @@ import React from "react";
 import { View, TouchableOpacity, Modal } from "react-native";
 import { YStack, Text } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "../../contexts/ThemeContext";
-import { useLocalization } from "../../contexts/LocalizationContext";
-import { ColorScheme } from "../../types";
+import { useTheme } from "../../../contexts/ThemeContext";
+import { useLocalization } from "../../../contexts/LocalizationContext";
+import { ColorScheme } from "../../../types";
 
 interface ThemeSelectorProps {
   visible: boolean;

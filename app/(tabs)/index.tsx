@@ -84,7 +84,7 @@ export default function Index() {
         <Text fontSize={24} fontWeight="bold" color={colors.foreground}>
           Actualités
         </Text>
-        <Button onPress={() => router.push("/complete-profil-combined")}>
+        <Button onPress={() => router.push("/(formProfile)/complete-profil-combined")}>
           Complete profile
         </Button>
       </ScrollView>

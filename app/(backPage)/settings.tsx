@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, Modal, TouchableOpacity, StatusBar } from "react-native";
+import { ScrollView } from "react-native";
 import { Text, View, XStack, YStack, H2, ListItem } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -8,7 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { BackHeader } from "../../components/common/BackHeader";
 import LanguageSelector from "../../components/common/LanguageSelector";
 import ConfirmationModal from "../../components/common/ConfirmationModal";
-import { ThemeSelector } from "../../components/settings/ThemeSelector";
+import { ThemeSelector } from "../../components/modals/settings/ThemeSelector";
+import { LanguageModal } from "../../components/modals/settings/LanguageModal";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -509,41 +510,12 @@ export default function Settings() {
       </ScrollView>
 
       {/* Modal de sélection de langue */}
-      <Modal
+      <LanguageModal
         visible={showLanguageSelector}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setShowLanguageSelector(false)}
-        statusBarTranslucent={true}
-        hardwareAccelerated={true}
+        onClose={() => setShowLanguageSelector(false)}
       >
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
-            paddingTop: 0,
-            paddingBottom: 0,
-          }}
-          activeOpacity={1}
-          onPress={() => setShowLanguageSelector(false)}
-        >
-
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor="transparent"
-            translucent={true}
-          />
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={(e: any) => e.stopPropagation()}
-          >
-            <LanguageSelector onClose={() => setShowLanguageSelector(false)} />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
+        <LanguageSelector onClose={() => setShowLanguageSelector(false)} />
+      </LanguageModal>
 
       {/* Modal de sélection de thème */}
       <ThemeSelector

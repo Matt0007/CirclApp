@@ -18,7 +18,7 @@ export const useImageUpload = () => {
   const pickImage = async (): Promise<string | null> => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: [ImagePicker.MediaType.Image],
+        mediaTypes: "images",
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
@@ -114,6 +114,7 @@ export const useImageUpload = () => {
         throw new Error("Erreur lors de la confirmation de l'upload");
       }
 
+      // Retourner le chemin relatif (sera stocké en base de données)
       return uploadData.publicUrl;
     } catch (error) {
       console.error("Erreur lors de l'upload:", error);
