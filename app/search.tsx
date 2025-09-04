@@ -101,7 +101,7 @@ const SearchUserItem = ({
           </XStack>
         )}
       </View>
-      <Ionicons name="chevron-forward" size={20} color={colors.primary} />
+      <Ionicons name="chevron-forward" size={20} color={colors.foreground} />
     </TouchableOpacity>
   );
 };
@@ -202,7 +202,7 @@ export default function Search() {
             <Ionicons
               name="chevron-back-outline"
               size={24}
-              color={colors.primary}
+              color={colors.foreground}
             />
           </Button>
 

@@ -2,7 +2,6 @@ import React from "react";
 import { ScrollView } from "react-native";
 import { Text, View, XStack, YStack } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
-import { useAuth } from "../../contexts/AuthContext";
 import { useSecureImage } from "../../hooks/useSecureImage";
 import { Ionicons } from "@expo/vector-icons";
 
