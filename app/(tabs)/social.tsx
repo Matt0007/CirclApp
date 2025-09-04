@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import { Text, XStack, YStack } from "tamagui";
+import { Text, XStack } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useLocalization } from "../../contexts/LocalizationContext";
@@ -22,6 +22,7 @@ export default function Social() {
   // Demander les permissions de localisation
   useEffect(() => {
     requestLocationPermission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const requestLocationPermission = async () => {

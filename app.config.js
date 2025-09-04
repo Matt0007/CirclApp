@@ -19,8 +19,9 @@ export default {
     policy: "appVersion"
   },
   extra: {
-    apiUrl: process.env.API_URL || "https://circlapi-production.up.railway.app",
-    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN || "pk.eyJ1IjoiY2lyY2xjb3JwIiwiYSI6ImNtZjQ0N202YjAxcDYybHM0MDN0b3FzcXkifQ.pynfpxuVtpMNFyVwsQIe4A",
+    apiUrl: process.env.API_URL,
+    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN ,
+    imageSecretToken: process.env.IMAGE_SECRET_TOKEN ,
     eas: {
       projectId: "48bed89c-0471-40fc-aebd-7db3bd151a96"
     }

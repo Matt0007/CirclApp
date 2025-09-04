@@ -1,6 +1,5 @@
 import React from "react";
-import { ScrollView } from "react-native";
-import { Text, View, XStack, YStack, Button } from "tamagui";
+import { Text, View, XStack, Button } from "tamagui";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -10,13 +9,11 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { ButtonGradient } from "@/components/common";
-import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
+import { UserProfile } from "@/components/common";
 
 export default function Profile() {
   const { colors } = useTheme();
-  const { user, isAuthenticated, secureImageUrl, refreshUserData } = useAuth();
+  const { user, isAuthenticated, refreshUserData } = useAuth();
   const insets = useSafeAreaInsets();
   const [isNavigating, setIsNavigating] = React.useState(false);
 
@@ -130,186 +127,14 @@ export default function Profile() {
         </XStack>
       </XStack>
 
-      {/* Contenu scrollable */}
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Section principale du profil */}
-        <YStack paddingHorizontal="$4" paddingTop="$5" space="$5">
-          {/* Informations du profil */}
-          <XStack space="$5" alignItems="flex-start">
-            {/* Avatar */}
-            <View
-              style={{
-                width: 90,
-                height: 90,
-                borderRadius: 45,
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-              }}
-            >
-              {/* Dégradé de la bordure */}
-              <LinearGradient
-                colors={[colors.primary, colors.primary + "80", colors.primary]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{
-                  position: "absolute",
-                  width: 90,
-                  height: 90,
-                  borderRadius: 45,
-                }}
-              />
-
-              {/* Cercle intérieur */}
-              <View
-                style={{
-                  width: 84,
-                  height: 84,
-                  borderRadius: 42,
-                  backgroundColor: colors.card,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  overflow: "hidden",
-                }}
-              >
-                {secureImageUrl && secureImageUrl !== null ? (
-                  <Image
-                    source={{ uri: secureImageUrl }}
-                    style={{
-                      width: 84,
-                      height: 84,
-                      borderRadius: 42,
-                    }}
-                    contentFit="cover"
-                    cachePolicy="memory-disk"
-                    transition={100}
-                  />
-                ) : (
-                  <Ionicons name="person" size={40} color={colors.primary} />
-                )}
-              </View>
-            </View>
-
-            {/* Statistiques et description */}
-            <YStack flex={1} space="$4">
-              {/* Trois statistiques */}
-              <XStack space="$1" justifyContent="space-between" marginLeft="$8">
-                <YStack flex={1} alignItems="flex-start" space="$1">
-                  <Text
-                    color={colors.mutedForeground}
-                    fontSize="$2"
-                    fontWeight="500"
-                  >
-                    Post
-                  </Text>
-                  <Text
-                    color={colors.foreground}
-                    fontSize="$5"
-                    fontWeight="700"
-                  >
-                    0
-                  </Text>
-                </YStack>
-                <YStack flex={1} alignItems="flex-start" space="$1">
-                  <Text
-                    color={colors.mutedForeground}
-                    fontSize="$2"
-                    fontWeight="500"
-                  >
-                    Follower
-                  </Text>
-                  <Text
-                    color={colors.foreground}
-                    fontSize="$5"
-                    fontWeight="700"
-                  >
-                    0
-                  </Text>
-                </YStack>
-                <YStack flex={1} alignItems="flex-start" space="$1">
-                  <Text
-                    color={colors.mutedForeground}
-                    fontSize="$2"
-                    fontWeight="500"
-                  >
-                    Following
-                  </Text>
-                  <Text
-                    color={colors.foreground}
-                    fontSize="$5"
-                    fontWeight="700"
-                  >
-                    0
-                  </Text>
-                </YStack>
-              </XStack>
-              <Text
-                color={colors.foreground}
-                fontSize="$3"
-                lineHeight={20}
-                numberOfLines={2}
-              >
-                Aucune description
-              </Text>
-            </YStack>
-          </XStack>
-
-          {/* Bouton Modifier le profil */}
-          <YStack space="$3">
-            <ButtonGradient
-              title="Modifier le profil"
-              onPress={() => console.log("Modifier le profil")}
-              size="small"
-            />
-          </YStack>
-
-          {/* Liste horizontale des sports */}
-          <YStack space="$3">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingRight: 16 }}
-            >
-              <XStack space="$3">
-                {user.userSports && user.userSports.length > 0 ? (
-                  user.userSports.map((userSport) => (
-                    <View
-                      key={userSport.id}
-                      paddingHorizontal="$3"
-                      paddingVertical="$2"
-                      backgroundColor={colors.accent}
-                      borderRadius="$3"
-                    >
-                      <Text
-                        color={colors.accentForeground}
-                        fontSize="$2"
-                        fontWeight="500"
-                      >
-                        {userSport.sport.name}
-                      </Text>
-                    </View>
-                  ))
-                ) : (
-                  <View
-                    paddingHorizontal="$3"
-                    paddingVertical="$2"
-                    backgroundColor={colors.muted}
-                    borderRadius="$3"
-                  >
-                    <Text
-                      color={colors.mutedForeground}
-                      fontSize="$2"
-                      fontWeight="500"
-                    >
-                      Aucun sport
-                    </Text>
-                  </View>
-                )}
-              </XStack>
-            </ScrollView>
-          </YStack>
-        </YStack>
-      </ScrollView>
+      {/* Contenu du profil utilisant le composant réutilisable */}
+      <UserProfile
+        user={user}
+        isOwnProfile={true}
+        postsCount={0}
+        followersCount={0}
+        followingCount={0}
+      />
     </View>
   );
 }

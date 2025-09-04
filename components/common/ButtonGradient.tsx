@@ -10,7 +10,7 @@ interface ButtonGradientProps {
   disabled?: boolean;
   loadingText?: string;
   variant?: "primary" | "secondary";
-  size?: "small" | "medium" | "large";
+  size?: "xs" | "small" | "medium" | "large";
 }
 
 export default function ButtonGradient({
@@ -26,6 +26,8 @@ export default function ButtonGradient({
 
   const getSizeStyles = () => {
     switch (size) {
+      case "xs":
+        return { paddingVertical: 6, paddingHorizontal: 12, minWidth: 60 };
       case "small":
         return { paddingVertical: 8, paddingHorizontal: 16, minWidth: 80 };
       case "large":
@@ -39,7 +41,7 @@ export default function ButtonGradient({
     if (variant === "secondary") {
       return {
         backgroundColor: colors.card,
-        borderColor: colors.border,
+        borderColor: colors.card,
         borderWidth: 1,
       };
     }
@@ -113,7 +115,7 @@ export default function ButtonGradient({
           ...getSizeStyles(),
           alignItems: "center",
           justifyContent: "center",
-          minHeight: 44, // Hauteur minimale pour éviter la coupure
+          minHeight: size === "xs" ? 36 : 44, // Hauteur minimale adaptée à la taille
         }}
       >
         {isLoading ? (
@@ -121,7 +123,7 @@ export default function ButtonGradient({
         ) : (
           <Text
             style={{
-              fontSize: 16,
+              fontSize: size === "xs" ? 14 : 16,
               fontWeight: "bold",
               color: getTextColor(),
               textAlign: "center",

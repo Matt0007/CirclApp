@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Alert,
+  Appearance,
 } from "react-native";
 import { YStack, Text } from "tamagui";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,6 +35,14 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
   onBirthDateChange,
 }) => {
   const { colors, colorScheme } = useTheme();
+
+  // Détecter le thème système pour le DateTimePicker
+  const getSystemTheme = () => {
+    if (colorScheme === "auto") {
+      return Appearance.getColorScheme() || "light";
+    }
+    return colorScheme;
+  };
   const { t, locale } = useLocalization();
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date>(
@@ -383,7 +392,7 @@ export const BasicProfileInput: React.FC<BasicProfileInputProps> = ({
                   onChange={handleDateChange}
                   maximumDate={new Date()}
                   minimumDate={new Date(1900, 0, 1)}
-                  themeVariant={colorScheme === "light" ? "light" : "dark"}
+                  themeVariant={getSystemTheme()}
                   locale={locale === "fr" ? "fr-FR" : "en-US"}
                 />
 

@@ -1,21 +1,81 @@
-import { View } from "react-native";
-import { Button, Text } from "tamagui";
+import React from "react";
+import { View, ScrollView } from "react-native";
+import { Text, XStack, Button } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   const { colors } = useTheme();
+  const { user } = useAuth();
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         backgroundColor: colors.background,
+        paddingTop: insets.top,
       }}
     >
-      <View
-        style={{
-          flex: 1,
+      {/* Header avec nom et boutons d'action */}
+      <XStack
+        justifyContent="space-between"
+        alignItems="center"
+        paddingHorizontal="$4"
+        paddingVertical="$2"
+        backgroundColor={colors.background}
+      >
+        {/* Nom complet */}
+        <View style={{ flex: 1 }}>
+          <Text
+            color={colors.foreground}
+            fontSize="$7"
+            fontWeight="800"
+            numberOfLines={1}
+          >
+            {user?.firstName} {user?.lastName}
+          </Text>
+        </View>
+
+        {/* Boutons d'action */}
+        <XStack space="$3" alignItems="center">
+          <Button
+            size="$3"
+            circular
+            backgroundColor="transparent"
+            focusStyle={{ backgroundColor: "transparent" }}
+            hoverStyle={{ backgroundColor: "transparent" }}
+            pressStyle={{ backgroundColor: "transparent" }}
+            borderWidth={0}
+            outlineColor="transparent"
+            onPress={() => router.push("/search")}
+          >
+            <Ionicons name="search" size={24} color={colors.foreground} />
+          </Button>
+          <Button
+            size="$3"
+            circular
+            backgroundColor="transparent"
+            focusStyle={{ backgroundColor: "transparent" }}
+            hoverStyle={{ backgroundColor: "transparent" }}
+            pressStyle={{ backgroundColor: "transparent" }}
+            borderWidth={0}
+            outlineColor="transparent"
+          >
+            <Ionicons name="chatbubble" size={24} color={colors.foreground} />
+          </Button>
+        </XStack>
+      </XStack>
+
+      {/* Contenu principal scrollable */}
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: colors.background,
@@ -24,28 +84,10 @@ export default function Index() {
         <Text fontSize={24} fontWeight="bold" color={colors.foreground}>
           Actualités
         </Text>
-        <Button
-          margin={20}
-          borderWidth={1}
-          borderColor={colors.primary}
-          backgroundColor={colors.primary}
-          borderRadius={12}
-          height={300}
-          onPress={() => router.push("/complete-profil-combined")}
-        >
-          <Text
-            fontSize={40}
-            textAlign="center"
-            fontWeight="bold"
-            color={colors.background}
-          >
-            Test Page Combinée
-          </Text>
+        <Button onPress={() => router.push("/complete-profil-combined")}>
+          Complete profile
         </Button>
-        <Button onPress={() => router.push("/profile-completed")}>
-          <Text>Completez votre profil (ancien)</Text>
-        </Button>
-      </View>
-    </SafeAreaView>
+      </ScrollView>
+    </View>
   );
 }

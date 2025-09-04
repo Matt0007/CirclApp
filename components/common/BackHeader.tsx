@@ -31,10 +31,8 @@ export const BackHeader: React.FC<BackHeaderProps> = ({
       alignItems="center"
       paddingHorizontal="$4"
       backgroundColor={colors.background}
-
     >
       <Button
-      
         size="$3"
         circular
         backgroundColor="transparent"
@@ -45,7 +43,11 @@ export const BackHeader: React.FC<BackHeaderProps> = ({
         borderWidth={0}
         outlineColor="transparent"
       >
-        <Ionicons name="arrow-back" size={20} color={colors.foreground} />
+        <Ionicons
+          name="chevron-back-outline"
+          size={20}
+          color={colors.foreground}
+        />
       </Button>
 
       <H1 color={colors.foreground} fontSize="$5" fontWeight="bold">
