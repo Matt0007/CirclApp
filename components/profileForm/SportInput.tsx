@@ -17,6 +17,7 @@ import { useLocalization } from "../../contexts/LocalizationContext";
 import ButtonGradient from "../common/ButtonGradient";
 import ConfirmationModal from "../common/ConfirmationModal";
 import { API_BASE_URL } from "../../config/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Interface pour les sports de l'API
 interface SportDB {
@@ -225,6 +226,7 @@ export const SportInput: React.FC<SportInputProps> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchResults, setSearchResults] = useState<SportDB[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+
   const translateYAnim = useRef(new Animated.Value(0)).current;
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -295,15 +297,34 @@ export const SportInput: React.FC<SportInputProps> = ({
     }
 
     setIsSearching(true);
+
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/sports/search?query=${encodeURIComponent(
-          query.trim()
-        )}&limit=15`
-      );
+      // Récupérer le token d'authentification
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.error("🔍 Token non trouvé");
+        setSearchResults([]);
+        return;
+      }
+
+      const searchUrl = `${API_BASE_URL}/sports/search?query=${encodeURIComponent(
+        query.trim()
+      )}&limit=15`;
+
+      console.log("🔍 Recherche sports:", searchUrl);
+
+      const response = await fetch(searchUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("🔍 Status response:", response.status);
 
       if (response.ok) {
         const data = await response.json();
+        console.log("🔍 Données reçues:", data);
+
         // Filtrer les sports déjà affichés dans la liste principale
         const filteredData = data.filter(
           (apiSport: SportDB) =>
@@ -312,12 +333,15 @@ export const SportInput: React.FC<SportInputProps> = ({
                 sport.name.toLowerCase() === apiSport.name.toLowerCase()
             )
         );
+
+        console.log("🔍 Données filtrées:", filteredData);
         setSearchResults(filteredData);
       } else {
+        console.error("🔍 Erreur API:", response.status);
         setSearchResults([]);
       }
     } catch (error) {
-      console.error("Erreur lors de la recherche des sports:", error);
+      console.error("🔍 Erreur lors de la recherche des sports:", error);
       setSearchResults([]);
     } finally {
       setIsSearching(false);
@@ -679,7 +703,14 @@ export const SportInput: React.FC<SportInputProps> = ({
                             clearTimeout(searchTimeoutRef.current);
                           }
 
-                          // Lancer la recherche après 500ms d'inactivité
+                          if (text.length > 2) {
+                            // Activer le loading immédiatement
+                            setIsSearching(true);
+                          } else {
+                            setIsSearching(false);
+                          }
+
+                          // Lancer la recherche après 400ms d'inactivité
                           searchTimeoutRef.current = setTimeout(() => {
                             searchSports(text);
                           }, 400);

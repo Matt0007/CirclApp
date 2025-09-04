@@ -35,6 +35,7 @@ export const CityInput: React.FC<CityInputProps> = ({
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isValidCity, setIsValidCity] = useState<boolean>(false);
+
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleCityChange = async (text: string) => {
@@ -46,9 +47,12 @@ export const CityInput: React.FC<CityInputProps> = ({
     }
 
     if (text.length > 2) {
+      // Activer le loading immédiatement
+      setIsLoadingCities(true);
+
+
       // Lancer la recherche après 400ms d'inactivité
       searchTimeoutRef.current = setTimeout(async () => {
-        setIsLoadingCities(true);
         try {
           // API officielle française pour les communes
           const response = await fetch(
@@ -146,6 +150,8 @@ export const CityInput: React.FC<CityInputProps> = ({
       }, 400);
     } else {
       setCitySuggestions([]);
+      setIsLoadingCities(false);
+
     }
   };
 
@@ -169,6 +175,7 @@ export const CityInput: React.FC<CityInputProps> = ({
       setSearchQuery("");
       setCitySuggestions([]);
       setIsValidCity(false);
+      setIsLoadingCities(false);
     }
     setShowDropdown(!showDropdown);
   };
@@ -178,6 +185,8 @@ export const CityInput: React.FC<CityInputProps> = ({
     setCitySuggestions([]);
     setSearchQuery("");
     setIsValidCity(false);
+
+    setIsLoadingCities(false);
     // Annuler le timeout de recherche en cours
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);

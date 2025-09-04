@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, ScrollView, TextInput, TouchableOpacity, Keyboard } from "react-native";
 import { Text, XStack, Button } from "tamagui";
 import { useTheme } from "../contexts/ThemeContext";
-
 import { useSecureImage } from "../hooks/useSecureImage";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { API_BASE_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Image } from "expo-image";
+import { SearchSkeleton } from "../components/common";
 
 interface SearchUser {
   id: string;
@@ -40,6 +35,7 @@ const SearchUserItem = ({
   onPress: (userId: string, secureImageUrl?: string) => void;
 }) => {
   const { secureImageUrl } = useSecureImage(user.profileImage || null);
+  const [imageLoading, setImageLoading] = useState(!!secureImageUrl);
 
   return (
     <TouchableOpacity
@@ -63,14 +59,35 @@ const SearchUserItem = ({
         }}
       >
         {secureImageUrl ? (
-          <Image
-            source={{ uri: secureImageUrl }}
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-            }}
-          />
+          <>
+            {imageLoading && (
+              <View
+                style={{
+                  position: "absolute",
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  backgroundColor: colors.muted,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons name="person" size={24} color={colors.primary} />
+              </View>
+            )}
+            <Image
+              source={{ uri: secureImageUrl }}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+              }}
+              onLoad={() => setImageLoading(false)}
+              onError={() => setImageLoading(false)}
+              placeholder={null}
+              transition={200}
+            />
+          </>
         ) : (
           <Ionicons name="person" size={24} color={colors.primary} />
         )}
@@ -113,14 +130,17 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const searchUsers = async (query: string) => {
-    if (!query.trim() || query.trim().length < 2) {
+    if (!query.trim() || query.trim().length < 1) {
       setSearchResults([]);
+      setHasSearched(false);
       return;
     }
 
     setIsLoading(true);
+    setHasSearched(true);
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
@@ -165,6 +185,7 @@ export default function Search() {
   }, [searchQuery]);
 
   const handleUserPress = (userId: string, secureImageUrl?: string) => {
+    Keyboard.dismiss();
     router.push({
       pathname: `/profile/${userId}`,
       params: { secureImageUrl },
@@ -248,13 +269,12 @@ export default function Search() {
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: 20 }}
       >
         {isLoading ? (
-          <View style={{ padding: 20, alignItems: "center" }}>
-            <Text color={colors.mutedForeground}>Recherche en cours...</Text>
-          </View>
-        ) : searchQuery.length > 0 && searchResults.length === 0 ? (
+          <SearchSkeleton count={5} />
+        ) : hasSearched && searchResults.length === 0 ? (
           <View style={{ padding: 20, alignItems: "center" }}>
             <Text color={colors.mutedForeground}>Aucun utilisateur trouvé</Text>
           </View>

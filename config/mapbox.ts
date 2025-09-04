@@ -2,7 +2,8 @@ import Constants from "expo-constants";
 
 // 3. Copiez votre token (commence par pk.)
 export const MAPBOX_ACCESS_TOKEN =
-  Constants.expoConfig?.extra?.mapboxAccessToken; // Token Mapbox pour Circl
+  Constants.expoConfig?.extra?.mapboxAccessToken ||
+  "pk.eyJ1IjoiY2lyY2xjb3JwIiwiYSI6ImNtZjQ0N202YjAxcDYybHM0MDN0b3FzcXkifQ.pynfpxuVtpMNFyVwsQIe4A"; ; // Token Mapbox pour Circl
 
 // Styles de carte disponibles pour Mapbox GL JS
 export const MAP_STYLES = {

@@ -20,8 +20,8 @@ export default {
   },
   extra: {
     apiUrl: process.env.API_URL,
-    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN ,
-    imageSecretToken: process.env.IMAGE_SECRET_TOKEN ,
+    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+    imageSecretToken: process.env.IMAGE_SECRET_TOKEN,
     eas: {
       projectId: "48bed89c-0471-40fc-aebd-7db3bd151a96"
     }

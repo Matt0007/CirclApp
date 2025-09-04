@@ -127,7 +127,7 @@ export default function CompleteProfilCombined() {
     }
   };
 
-  const isStep1Valid = gender && birthDate && profileImage;
+  const isStep1Valid = gender && birthDate ;
   const isStep2Valid = city && isCityValid && selectedSports.length > 0;
 
   return (

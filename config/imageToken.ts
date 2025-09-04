@@ -1,5 +1,5 @@
-import Constants from "expo-constants";
-export const IMAGE_SECRET_TOKEN = Constants.expoConfig?.extra?.imageSecretToken;
+export const IMAGE_SECRET_TOKEN =
+  "9a3c8e1f9f6d2b4a7c5e0d1a8f2b9c6d7e4a0f1b3d8c6e9f7a2d4c0b5e7f3a9";
 
 // Fonction pour obtenir l'URL sécurisée d'une image
 export const getSecureImageUrl = (imageUrl: string | null): string | null => {
