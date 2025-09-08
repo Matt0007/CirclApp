@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Text, XStack, Button } from "tamagui";
 import { useTheme } from "../contexts/ThemeContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 import { useSecureImage } from "../hooks/useSecureImage";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -131,6 +132,7 @@ const SearchUserItem = ({
 
 export default function Search() {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const insets = useSafeAreaInsets();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -252,7 +254,7 @@ export default function Search() {
                 fontSize: 16,
                 color: colors.foreground,
               }}
-              placeholder="Rechercher des utilisateurs..."
+              placeholder={t("searchUsers")}
               placeholderTextColor={colors.mutedForeground}
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -282,7 +284,7 @@ export default function Search() {
           <SearchSkeleton count={5} />
         ) : hasSearched && searchResults.length === 0 ? (
           <View style={{ padding: 20, alignItems: "center" }}>
-            <Text color={colors.mutedForeground}>Aucun utilisateur trouvé</Text>
+            <Text color={colors.mutedForeground}>{t("noUsersFound")}</Text>
           </View>
         ) : (
           searchResults.map((user) => (

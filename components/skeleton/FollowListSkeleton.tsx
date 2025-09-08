@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Animated } from "react-native";
-import { Text, View, XStack, YStack } from "tamagui";
+import {  View, XStack, YStack } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 
 export const FollowListSkeleton: React.FC = () => {

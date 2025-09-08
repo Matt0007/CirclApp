@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Pressable } from "react-native";
 import { Text, View, XStack, YStack } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import { useSecureImage } from "../../hooks/useSecureImage";
 import { useFollow } from "../../hooks/useFollow";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,6 +29,7 @@ export const FollowListItem: React.FC<FollowListItemProps> = ({
   onFollowChange,
 }) => {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const { secureImageUrl } = useSecureImage(user.profileImage || null);
   const {
     followUser,
@@ -61,6 +63,7 @@ export const FollowListItem: React.FC<FollowListItemProps> = ({
     };
 
     checkStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.id]);
 
   const handleFollowToggle = async () => {
@@ -127,14 +130,14 @@ export const FollowListItem: React.FC<FollowListItemProps> = ({
       // Sur son propre profil
       if (tabType === "following") {
         return {
-          title: "Unfollow",
+          title: t("unfollow"),
           variant: "secondary" as const,
           action: handleFollowToggle,
         };
       } else if (tabType === "followers") {
         // Dans ses propres followers, on veut supprimer le follower
         return {
-          title: "Supprimer",
+          title: t("remove"),
           variant: "secondary" as const,
           action: handleFollowToggle,
         };
@@ -143,13 +146,13 @@ export const FollowListItem: React.FC<FollowListItemProps> = ({
       // Sur le profil de quelqu'un d'autre
       if (tabType === "following") {
         return {
-          title: isFollowing ? "Unfollow" : "Follow",
+          title: isFollowing ? t("unfollow") : t("follow"),
           variant: isFollowing ? ("secondary" as const) : ("primary" as const),
           action: handleFollowToggle,
         };
       } else if (tabType === "followers") {
         return {
-          title: isFollowing ? "Unfollow" : "Follow",
+          title: isFollowing ? t("unfollow") : t("follow"),
           variant: isFollowing ? ("secondary" as const) : ("primary" as const),
           action: handleFollowToggle,
         };
@@ -240,7 +243,7 @@ export const FollowListItem: React.FC<FollowListItemProps> = ({
 
         {/* Bouton d'action */}
         {buttonConfig && hasInitialized && (
-          <View style={{ width: 80 }}>
+          <View style={{ width: 100 }}>
             <ButtonGradient
               title={buttonConfig.title}
               size="xs"

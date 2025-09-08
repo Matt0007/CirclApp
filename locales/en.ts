@@ -116,4 +116,25 @@ export default {
   selectTheme: "Select Theme",
   automatic: "Automatic",
   followSystem: "Follow system",
+
+  // User Profile
+  post: "Post",
+  follower: "Followers",
+  following: "Following",
+  noDescription: "No description",
+  unfollow: "Unfollow",
+  follow: "Follow",
+  write: "Write",
+  noSport: "No sport",
+
+  // Follow List
+  followers: "Followers",
+  noFollowersYet: "No followers yet",
+  noFollowingYet: "Not following anyone yet",
+  loading: "Loading...",
+  remove: "Remove",
+
+  // Search
+  searchUsers: "Search users...",
+  noUsersFound: "No users found",
 };

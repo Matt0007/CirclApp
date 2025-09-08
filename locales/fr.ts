@@ -118,4 +118,25 @@ export default {
   logout: "Déconnexion",
   logoutConfirm: "Voulez-vous vraiment vous déconnecter ?",
   account: "Compte",
+
+  // User Profile
+  post: "Post",
+  follower: "Abonnés",
+  following: "Suivi(e)s",
+  noDescription: "Aucune description",
+  unfollow: "Suivi(e)",
+  follow: "Suivre",
+  write: "Écrire",
+  noSport: "Aucun sport",
+
+  // Follow List
+  followers: "Abonnés",
+  noFollowersYet: "Aucun abonné pour le moment",
+  noFollowingYet: "Aucune personne suivie pour le moment",
+  loading: "Chargement...",
+  remove: "Supprimer",
+
+  // Search
+  searchUsers: "Rechercher des utilisateurs...",
+  noUsersFound: "Aucun utilisateur trouvé",
 };

@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FlatList, Pressable, ActivityIndicator } from "react-native";
 import { Text, View, XStack } from "tamagui";
 import { useTheme } from "../contexts/ThemeContext";
+import { useLocalization } from "../contexts/LocalizationContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useFollow } from "../hooks/useFollow";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
 import { FollowListItem } from "../components/common";
 import { FollowListSkeleton } from "../components/skeleton";
 
@@ -15,6 +15,7 @@ type TabType = "followers" | "following";
 
 export default function FollowList() {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const { user } = useAuth();
   const { userId, initialTab } = useLocalSearchParams<{
     userId: string;
@@ -75,6 +76,7 @@ export default function FollowList() {
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [userId]
   );
 
@@ -119,6 +121,8 @@ export default function FollowList() {
     followersHasMore,
     followingHasMore,
     isLoadingMore,
+    getFollowers,
+    getFollowing,
   ]);
 
   useEffect(() => {
@@ -126,17 +130,10 @@ export default function FollowList() {
       setIsOwnProfile(userId === user.id);
       loadData();
     }
-  }, [userId, user, loadData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [userId, user]);
 
-  // Recharger les données quand on revient sur la page
-  useFocusEffect(
-    useCallback(() => {
-      if (userId && user) {
-        console.log("🔄 Rechargement des données follow-list...");
-        loadData(false); // false pour ne pas remettre isLoading à true
-      }
-    }, [userId, user, loadData])
-  );
+  // Note: useFocusEffect supprimé pour éviter les boucles infinies
 
   const currentData = activeTab === "followers" ? followers : following;
   const currentHasMore =
@@ -193,7 +190,7 @@ export default function FollowList() {
                 fontSize="$4"
                 fontWeight={activeTab === "followers" ? "700" : "500"}
               >
-                {followersCount} Follower{followersCount > 1 ? "s" : ""}
+                {followersCount} {t("followers")}
               </Text>
             </View>
           </Pressable>
@@ -220,7 +217,7 @@ export default function FollowList() {
                 fontSize="$4"
                 fontWeight={activeTab === "following" ? "700" : "500"}
               >
-                {followingCount} Following
+                {followingCount} {t("following")}
               </Text>
             </View>
           </Pressable>
@@ -254,8 +251,8 @@ export default function FollowList() {
               marginTop="$4"
             >
               {activeTab === "followers"
-                ? "Aucun follower pour le moment"
-                : "Aucune personne suivie pour le moment"}
+                ? t("noFollowersYet")
+                : t("noFollowingYet")}
             </Text>
           </View>
         ) : (
@@ -292,7 +289,7 @@ export default function FollowList() {
                       fontSize="$3"
                       marginTop="$2"
                     >
-                      Chargement...
+                      {t("loading")}
                     </Text>
                   </View>
                 );

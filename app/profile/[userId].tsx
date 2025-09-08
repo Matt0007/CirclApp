@@ -170,7 +170,7 @@ export default function PublicProfile() {
           <Ionicons
             name="chevron-back-outline"
             size={24}
-            color={colors.primary}
+            color={colors.foreground}
           />
         </Button>
 

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, Pressable } from "react-native";
 import { Text, View, XStack, YStack } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
+import { useLocalization } from "../../contexts/LocalizationContext";
 import { useSecureImage } from "../../hooks/useSecureImage";
 import { useFollow } from "../../hooks/useFollow";
 import { ProfileSkeleton } from "../skeleton";
@@ -33,6 +34,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   refreshTrigger,
 }) => {
   const { colors } = useTheme();
+  const { t } = useLocalization();
   const { secureImageUrl: profileImageUrl } = useSecureImage(
     user.profileImage || null
   );
@@ -96,7 +98,15 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     };
 
     fetchData();
-  }, [user.id, isOwnProfile, refreshTrigger]);
+  }, [
+    user.id,
+    isOwnProfile,
+    refreshTrigger,
+    checkFollowStatus,
+    getFollowers,
+    getFollowing,
+    isInitialLoad,
+  ]);
 
   const handleFollowToggle = async () => {
     if (isLoading || isOwnProfile) return;
@@ -208,7 +218,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                   fontSize="$2"
                   fontWeight="500"
                 >
-                  Post
+                  {t("post")}
                 </Text>
                 <Text color={colors.foreground} fontSize="$5" fontWeight="700">
                   {postsCount}
@@ -229,7 +239,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                     fontSize="$2"
                     fontWeight="500"
                   >
-                    Follower
+                    {t("follower")}
                   </Text>
                   <Text
                     color={colors.foreground}
@@ -255,7 +265,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                     fontSize="$2"
                     fontWeight="500"
                   >
-                    Following
+                    {t("following")}
                   </Text>
                   <Text
                     color={colors.foreground}
@@ -273,7 +283,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
               lineHeight={20}
               numberOfLines={2}
             >
-              Aucune description
+              {t("noDescription")}
             </Text>
           </YStack>
         </XStack>
@@ -282,7 +292,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
         {isOwnProfile ? (
           <ButtonGradient
             size="xs"
-            title="Modifier le profil"
+            title={t("editProfile")}
             onPress={() => console.log("Modifier le profil")}
           />
         ) : (
@@ -293,8 +303,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                   isCheckingStatus
                     ? "..."
                     : isFollowing
-                    ? "Ne plus suivre"
-                    : "Suivre"
+                    ? t("unfollow")
+                    : t("follow")
                 }
                 size="xs"
                 onPress={handleFollowToggle}
@@ -303,7 +313,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
             </View>
             <View style={{ flex: 1 }}>
               <ButtonGradient
-                title="Écrire"
+                title={t("write")}
                 size="xs"
                 onPress={() => console.log("Écrire à l'utilisateur")}
                 variant="secondary"
@@ -350,7 +360,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                     fontSize="$2"
                     fontWeight="500"
                   >
-                    Aucun sport
+                    {t("noSport")}
                   </Text>
                 </View>
               )}
