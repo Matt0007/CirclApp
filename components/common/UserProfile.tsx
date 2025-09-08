@@ -1,9 +1,12 @@
-import React from "react";
-import { ScrollView } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { ScrollView, Pressable } from "react-native";
 import { Text, View, XStack, YStack } from "tamagui";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useSecureImage } from "../../hooks/useSecureImage";
+import { useFollow } from "../../hooks/useFollow";
+import { ProfileSkeleton } from "../skeleton";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 import ButtonGradient from "./ButtonGradient";
 import { Image } from "expo-image";
@@ -17,6 +20,7 @@ interface UserProfileProps {
   followersCount?: number;
   followingCount?: number;
   secureImageUrl?: string | null;
+  refreshTrigger?: number; // Pour forcer le rechargement des stats
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({
@@ -26,14 +30,113 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   followersCount = 0,
   followingCount = 0,
   secureImageUrl: providedImageUrl,
+  refreshTrigger,
 }) => {
   const { colors } = useTheme();
   const { secureImageUrl: profileImageUrl } = useSecureImage(
     user.profileImage || null
   );
+  const {
+    followUser,
+    unfollowUser,
+    checkFollowStatus,
+    getFollowers,
+    getFollowing,
+    isLoading,
+  } = useFollow();
+
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isCheckingStatus, setIsCheckingStatus] = useState(true);
+  const [apiFollowersCount, setApiFollowersCount] = useState(0);
+  const [apiFollowingCount, setApiFollowingCount] = useState(0);
+  const [isLoadingCounts, setIsLoadingCounts] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Utiliser l'image fournie en prop ou celle générée par le hook
   const finalImageUrl = providedImageUrl || profileImageUrl;
+
+  // Vérifier le statut de suivi et récupérer les compteurs au chargement du composant
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Ne pas afficher le skeleton lors des rechargements (refreshTrigger)
+        if (isInitialLoad) {
+          setIsLoadingCounts(true);
+        }
+
+        // Récupérer les compteurs pour tous les profils
+        const followersResponse = await getFollowers(user.id, 1, 1);
+        if (followersResponse?.success) {
+          setApiFollowersCount(followersResponse.data.pagination.total);
+        }
+
+        const followingResponse = await getFollowing(user.id, 1, 1);
+        if (followingResponse?.success) {
+          setApiFollowingCount(followingResponse.data.pagination.total);
+        }
+
+        // Vérifier le statut de suivi seulement si ce n'est pas notre propre profil
+        if (!isOwnProfile) {
+          const followStatusResponse = await checkFollowStatus(user.id);
+          if (followStatusResponse?.success) {
+            setIsFollowing(followStatusResponse.data.isFollowing);
+          }
+          setIsCheckingStatus(false);
+        } else {
+          setIsCheckingStatus(false);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données:", error);
+      } finally {
+        if (isInitialLoad) {
+          setIsLoadingCounts(false);
+          setIsInitialLoad(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [user.id, isOwnProfile, refreshTrigger]);
+
+  const handleFollowToggle = async () => {
+    if (isLoading || isOwnProfile) return;
+
+    try {
+      let response;
+      if (isFollowing) {
+        response = await unfollowUser(user.id);
+      } else {
+        response = await followUser(user.id);
+      }
+
+      if (response.success) {
+        setIsFollowing(!isFollowing);
+        // Mettre à jour les compteurs après le changement
+        try {
+          const followersResponse = await getFollowers(user.id, 1, 1);
+          if (followersResponse?.success) {
+            setApiFollowersCount(followersResponse.data.pagination.total);
+          }
+        } catch (error) {
+          console.error("Erreur lors de la mise à jour des compteurs:", error);
+        }
+      } else {
+        console.error("Erreur:", response.message);
+        // Ici vous pourriez afficher une alerte ou un toast
+      }
+    } catch (error) {
+      console.error("Erreur lors du changement de statut de suivi:", error);
+    }
+  };
+
+  // Afficher le skeleton global pendant le chargement des compteurs
+  if (isLoadingCounts) {
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ProfileSkeleton />
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -111,30 +214,58 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                   {postsCount}
                 </Text>
               </YStack>
-              <YStack flex={1} alignItems="flex-start" space="$1">
-                <Text
-                  color={colors.mutedForeground}
-                  fontSize="$2"
-                  fontWeight="500"
-                >
-                  Follower
-                </Text>
-                <Text color={colors.foreground} fontSize="$5" fontWeight="700">
-                  {followersCount}
-                </Text>
-              </YStack>
-              <YStack flex={1} alignItems="flex-start" space="$1">
-                <Text
-                  color={colors.mutedForeground}
-                  fontSize="$2"
-                  fontWeight="500"
-                >
-                  Following
-                </Text>
-                <Text color={colors.foreground} fontSize="$5" fontWeight="700">
-                  {followingCount}
-                </Text>
-              </YStack>
+              <Pressable
+                onPress={() => {
+                  router.push({
+                    pathname: "/follow-list",
+                    params: { userId: user.id, initialTab: "followers" },
+                  });
+                }}
+                style={{ flex: 1 }}
+              >
+                <YStack flex={1} alignItems="flex-start" space="$1">
+                  <Text
+                    color={colors.mutedForeground}
+                    fontSize="$2"
+                    fontWeight="500"
+                  >
+                    Follower
+                  </Text>
+                  <Text
+                    color={colors.foreground}
+                    fontSize="$5"
+                    fontWeight="700"
+                  >
+                    {apiFollowersCount}
+                  </Text>
+                </YStack>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  router.push({
+                    pathname: "/follow-list",
+                    params: { userId: user.id, initialTab: "following" },
+                  });
+                }}
+                style={{ flex: 1 }}
+              >
+                <YStack flex={1} alignItems="flex-start" space="$1">
+                  <Text
+                    color={colors.mutedForeground}
+                    fontSize="$2"
+                    fontWeight="500"
+                  >
+                    Following
+                  </Text>
+                  <Text
+                    color={colors.foreground}
+                    fontSize="$5"
+                    fontWeight="700"
+                  >
+                    {apiFollowingCount}
+                  </Text>
+                </YStack>
+              </Pressable>
             </XStack>
             <Text
               color={colors.foreground}
@@ -158,9 +289,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({
           <XStack space="$3">
             <View style={{ flex: 1 }}>
               <ButtonGradient
-                title="Suivre"
+                title={
+                  isCheckingStatus
+                    ? "..."
+                    : isFollowing
+                    ? "Ne plus suivre"
+                    : "Suivre"
+                }
                 size="xs"
-                onPress={() => console.log("Suivre l'utilisateur")}
+                onPress={handleFollowToggle}
+                disabled={isLoading || isCheckingStatus}
               />
             </View>
             <View style={{ flex: 1 }}>

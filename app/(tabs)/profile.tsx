@@ -16,6 +16,7 @@ export default function Profile() {
   const { user, isAuthenticated, refreshUserData } = useAuth();
   const insets = useSafeAreaInsets();
   const [isNavigating, setIsNavigating] = React.useState(false);
+  const [refreshTrigger, setRefreshTrigger] = React.useState(0);
 
   // Refresh des données quand on arrive sur le profil
   useFocusEffect(
@@ -23,6 +24,8 @@ export default function Profile() {
       if (isAuthenticated) {
         console.log("🔄 Refresh des données utilisateur...");
         refreshUserData();
+        // Déclencher le rechargement des stats de follow
+        setRefreshTrigger((prev) => prev + 1);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated])
@@ -134,6 +137,7 @@ export default function Profile() {
         postsCount={0}
         followersCount={0}
         followingCount={0}
+        refreshTrigger={refreshTrigger}
       />
     </View>
   );

@@ -5,7 +5,6 @@ export const API_BASE_URL =
   Constants.expoConfig?.extra?.apiUrl ||
   "https://circlapi-production.up.railway.app";
 
-
 // Fallback vers l'URL par défaut si pas de configuration
 export const getApiUrl = () => {
   return API_BASE_URL;
